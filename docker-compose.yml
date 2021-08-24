@@ -1,0 +1,29 @@
+version: '3.4'
+
+services:
+  treinapp.api:
+    image: ${DOCKER_REGISTRY-}treinappapi
+    build:
+      context: .
+      dockerfile: src/Treinapp.API/Dockerfile
+
+  treinapp.reports.worker:
+    image: ${DOCKER_REGISTRY-}treinappreportsworker
+    build:
+      context: .
+      dockerfile: src/Treinapp.Reports.Worker/Dockerfile
+
+
+  treinapp.reports.portal:
+    image: ${DOCKER_REGISTRY-}treinappreportsportal
+    build:
+      context: .
+      dockerfile: src/Treinapp.Reports.Portal/Dockerfile
+
+
+  treinapp.reports.api:
+    image: ${DOCKER_REGISTRY-}treinappreportsapi
+    build:
+      context: .
+      dockerfile: src/Treinapp.Reports.API/Dockerfile
+

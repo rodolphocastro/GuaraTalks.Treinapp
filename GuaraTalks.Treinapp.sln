@@ -3,16 +3,70 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.6.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4EBB9FE4-BD5F-4A14-8A0F-EE101190E95E}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reports", "Reports", "{0403D07E-9E1B-4FE9-B89F-46BC960B6EA0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sports", "Sports", "{A3F90565-D64F-42A5-9F50-CDB7235C9F8C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treinapp.API", "src\Treinapp.API\Treinapp.API.csproj", "{F72F8979-DAAA-4651-A382-73279F3ACED2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treinapp.Spec", "tests\Treinapp.Spec\Treinapp.Spec.csproj", "{1DA33E4D-37C2-4BAD-AE81-152F0453FCCB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treinapp.Reports.Worker", "src\Treinapp.Reports.Worker\Treinapp.Reports.Worker.csproj", "{5C7AD2BB-5763-438A-9489-D23B8AE009DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treinapp.Reports.API", "src\Treinapp.Reports.API\Treinapp.Reports.API.csproj", "{037EA197-ED1E-48C1-89D8-B2ECFA733A8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treinapp.Reports.Portal", "src\Treinapp.Reports.Portal\Treinapp.Reports.Portal.csproj", "{A280BC7F-9A02-4F5D-A9C8-8E7640AE4788}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{2093F6E7-F553-419F-8788-9C43C29CC7FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
-		Release|x64 = Release|x64
-		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F72F8979-DAAA-4651-A382-73279F3ACED2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F72F8979-DAAA-4651-A382-73279F3ACED2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F72F8979-DAAA-4651-A382-73279F3ACED2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F72F8979-DAAA-4651-A382-73279F3ACED2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DA33E4D-37C2-4BAD-AE81-152F0453FCCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DA33E4D-37C2-4BAD-AE81-152F0453FCCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DA33E4D-37C2-4BAD-AE81-152F0453FCCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DA33E4D-37C2-4BAD-AE81-152F0453FCCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C7AD2BB-5763-438A-9489-D23B8AE009DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C7AD2BB-5763-438A-9489-D23B8AE009DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C7AD2BB-5763-438A-9489-D23B8AE009DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C7AD2BB-5763-438A-9489-D23B8AE009DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{037EA197-ED1E-48C1-89D8-B2ECFA733A8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{037EA197-ED1E-48C1-89D8-B2ECFA733A8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{037EA197-ED1E-48C1-89D8-B2ECFA733A8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{037EA197-ED1E-48C1-89D8-B2ECFA733A8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A280BC7F-9A02-4F5D-A9C8-8E7640AE4788}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A280BC7F-9A02-4F5D-A9C8-8E7640AE4788}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A280BC7F-9A02-4F5D-A9C8-8E7640AE4788}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A280BC7F-9A02-4F5D-A9C8-8E7640AE4788}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2093F6E7-F553-419F-8788-9C43C29CC7FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2093F6E7-F553-419F-8788-9C43C29CC7FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2093F6E7-F553-419F-8788-9C43C29CC7FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2093F6E7-F553-419F-8788-9C43C29CC7FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F72F8979-DAAA-4651-A382-73279F3ACED2} = {A3F90565-D64F-42A5-9F50-CDB7235C9F8C}
+		{1DA33E4D-37C2-4BAD-AE81-152F0453FCCB} = {A3F90565-D64F-42A5-9F50-CDB7235C9F8C}
+		{5C7AD2BB-5763-438A-9489-D23B8AE009DA} = {0403D07E-9E1B-4FE9-B89F-46BC960B6EA0}
+		{037EA197-ED1E-48C1-89D8-B2ECFA733A8F} = {0403D07E-9E1B-4FE9-B89F-46BC960B6EA0}
+		{A280BC7F-9A02-4F5D-A9C8-8E7640AE4788} = {0403D07E-9E1B-4FE9-B89F-46BC960B6EA0}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A42F0526-F885-44C6-8B13-DE3CAC9C60EE}
 	EndGlobalSection
 EndGlobal
