@@ -2,6 +2,8 @@
 
 using Microsoft.Extensions.Logging;
 
+using MongoDB.Driver;
+
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
@@ -27,17 +29,25 @@ namespace Treinapp.API.Features.Sports
     public class CreateSportHandler : IRequestHandler<CreateSport, Sport>
     {
         private readonly ILogger<CreateSportHandler> logger;
+        private readonly IMongoDatabase database;
 
-        public CreateSportHandler(ILogger<CreateSportHandler> logger)
+        public CreateSportHandler(ILogger<CreateSportHandler> logger, IMongoDatabase database)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.database = database ?? throw new ArgumentNullException(nameof(database));
         }
 
-        public Task<Sport> Handle(CreateSport request, CancellationToken cancellationToken)
+        public async Task<Sport> Handle(CreateSport request, CancellationToken cancellationToken)
         {
             logger.LogTrace("Creating a new sport");
-            // TODO: Actually persist
-            return Task.FromResult(new Sport(Guid.NewGuid(), request.Name, request.Description));
+            var sportPersistance = new SportPersistanceExtensions.SportPersistance
+            {
+                Description = request.Description,
+                Name = request.Name
+            };
+            var collection = database.GetSportsCollection();            
+            await collection.InsertOneAsync(sportPersistance, null, cancellationToken);
+            return sportPersistance.ToSport();
         }
     }
 }

@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
+using MongoDB.Driver;
+
 namespace Treinapp.API
 {
     public class Startup
@@ -21,6 +23,15 @@ namespace Treinapp.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(_ =>
+            {
+                return new MongoClient(Configuration.GetConnectionString(Constants.MongoConnectionKey));
+            });
+            services.AddScoped(sp =>
+            {
+                var mongoClient = sp.GetRequiredService<MongoClient>();
+                return mongoClient.GetDatabase(Constants.MongoDatabase);
+            });
             services.AddMediatR(GetType().Assembly);
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -61,5 +72,15 @@ namespace Treinapp.API
         /// Default route for controllers.
         /// </summary>
         public const string DefaultRoute = @"[controller]";
+
+        /// <summary>
+        /// Default key for the MongoDB Connection String.
+        /// </summary>
+        public const string MongoConnectionKey = @"MongoDb";
+
+        /// <summary>
+        /// Default database for this API's entities.
+        /// </summary>
+        public const string MongoDatabase = @"TreinaApp-entities";
     }
 }
