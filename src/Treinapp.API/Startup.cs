@@ -23,6 +23,22 @@ namespace Treinapp.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            AddMongoServices(services);
+            services.AddMediatR(GetType().Assembly);
+            services.AddControllers();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Treinapp.API", Version = "v1" });
+            });
+        }
+
+        /// <summary>
+        /// Adds the services required for working with MongoDB.
+        /// This means registering MongoClient as a Singleton and IMongoDatabase as a Scoped.
+        /// </summary>
+        /// <param name="services"></param>
+        private void AddMongoServices(IServiceCollection services)
+        {
             services.AddSingleton(_ =>
             {
                 return new MongoClient(Configuration.GetConnectionString(Constants.MongoConnectionKey));
@@ -31,12 +47,6 @@ namespace Treinapp.API
             {
                 var mongoClient = sp.GetRequiredService<MongoClient>();
                 return mongoClient.GetDatabase(Constants.MongoDatabase);
-            });
-            services.AddMediatR(GetType().Assembly);
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Treinapp.API", Version = "v1" });
             });
         }
 
