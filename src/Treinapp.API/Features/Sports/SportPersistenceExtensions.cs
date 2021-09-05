@@ -11,7 +11,7 @@ namespace Treinapp.API.Features.Sports
     /// <summary>
     /// Extensions related to storing Sports (the Domain Entity) on MongoDb.
     /// </summary>
-    public static class SportPersistanceExtensions
+    public static class SportPersistenceExtensions
     {
         /// <summary>
         /// The collection name within Mongo.
@@ -21,7 +21,7 @@ namespace Treinapp.API.Features.Sports
         /// <summary>
         /// DAL / POCO for storage.
         /// </summary>
-        public class SportPersistance
+        public class SportPersistence
         {
             public Guid Id { get; set; }
             public string Name { get; set; }
@@ -31,7 +31,7 @@ namespace Treinapp.API.Features.Sports
             /// Creates a Sport from this POCO.
             /// </summary>
             /// <returns></returns>
-            public Sport ToSport() => new(Id, Name, Description);            
+            public Sport ToSport() => new(Id, Name, Description);
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Treinapp.API.Features.Sports
         /// </summary>
         /// <param name="sport"></param>
         /// <returns></returns>
-        public static SportPersistance ToPersistance(this Sport sport)
+        public static SportPersistence ToPersistence(this Sport sport)
         {
             return new()
             {
@@ -54,7 +54,7 @@ namespace Treinapp.API.Features.Sports
         /// </summary>
         /// <param name="mongoDb"></param>
         /// <returns></returns>
-        public static IMongoCollection<SportPersistance> GetSportsCollection(this IMongoDatabase mongoDb) => mongoDb.GetCollection<SportPersistance>(SportsCollectionName);
+        public static IMongoCollection<SportPersistence> GetSportsCollection(this IMongoDatabase mongoDb) => mongoDb.GetCollection<SportPersistence>(SportsCollectionName);
 
         /// <summary>
         /// Inserts a new Sport into the collection.
@@ -63,7 +63,7 @@ namespace Treinapp.API.Features.Sports
         /// <param name="sport"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<Sport> InsertNewAsync(this IMongoCollection<SportPersistance> collection, SportPersistance sport, CancellationToken cancellationToken = default)
+        public static async Task<Sport> InsertNewAsync(this IMongoCollection<SportPersistence> collection, SportPersistence sport, CancellationToken cancellationToken = default)
         {
             await collection.InsertOneAsync(sport, null, cancellationToken);
             return sport.ToSport();
@@ -75,7 +75,7 @@ namespace Treinapp.API.Features.Sports
         /// <param name="collection"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public static async Task<IEnumerable<Sport>> GetAllAsync(this IMongoCollection<SportPersistance> collection, CancellationToken cancellationToken = default)
+        public static async Task<IEnumerable<Sport>> GetAllAsync(this IMongoCollection<SportPersistence> collection, CancellationToken cancellationToken = default)
         {
             var mongoResults = await collection.Find(_ => true).ToListAsync(cancellationToken);
             return mongoResults.Select(r => r.ToSport());

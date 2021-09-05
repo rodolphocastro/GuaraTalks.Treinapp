@@ -40,15 +40,15 @@ namespace Treinapp.API.Features.Sports
         public async Task<Sport> Handle(CreateSport request, CancellationToken cancellationToken)
         {
             logger.LogTrace("Creating a new sport");
-            var sportPersistance = new SportPersistanceExtensions.SportPersistance
+            var sportPoco = new SportPersistenceExtensions.SportPersistence
             {
                 Description = request.Description,
                 Name = request.Name
             };
             await database
                 .GetSportsCollection()
-                .InsertNewAsync(sportPersistance, cancellationToken);
-            return sportPersistance.ToSport();
+                .InsertNewAsync(sportPoco, cancellationToken);
+            return sportPoco.ToSport();
         }
     }
 }
