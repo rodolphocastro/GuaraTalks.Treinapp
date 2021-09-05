@@ -45,8 +45,9 @@ namespace Treinapp.API.Features.Sports
                 Description = request.Description,
                 Name = request.Name
             };
-            var collection = database.GetSportsCollection();            
-            await collection.InsertOneAsync(sportPersistance, null, cancellationToken);
+            await database
+                .GetSportsCollection()
+                .InsertNewAsync(sportPersistance, cancellationToken);
             return sportPersistance.ToSport();
         }
     }

@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,9 +31,10 @@ namespace Treinapp.API.Features.Sports
         public async Task<IEnumerable<Sport>> Handle(ListSports request, CancellationToken cancellationToken)
         {
             logger.LogTrace("Listing all sports");
-            var collection = database.GetSportsCollection();
-            var mongoResults = await collection.Find(_ => true).ToListAsync(cancellationToken);
-            return mongoResults.Select(r => r.ToSport());
+            var result = await database
+                .GetSportsCollection()
+                .GetAllAsync(cancellationToken);
+            return result;
         }
     }
 }
