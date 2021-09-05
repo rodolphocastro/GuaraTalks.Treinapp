@@ -1,0 +1,17 @@
+name: Build all images
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build all docker images
+      run: docker-compose build
