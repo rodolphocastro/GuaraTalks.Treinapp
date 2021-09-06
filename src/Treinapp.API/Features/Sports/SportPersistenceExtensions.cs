@@ -84,5 +84,34 @@ namespace Treinapp.API.Features.Sports
             var mongoResults = await collection.Find(_ => true).ToListAsync(cancellationToken);
             return mongoResults.Select(r => r.ToSport());
         }
+
+        /// <summary>
+        /// Fetches a single Sport by its Id.
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <param name="sportId"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public static async Task<Sport> FetchAsync(this IMongoCollection<SportPersistence> collection, Guid sportId, CancellationToken cancellationToken = default)
+        {
+            var mongoResult = await collection
+                .Find(s => s.Id.Equals(sportId))
+                .SingleOrDefaultAsync(cancellationToken);
+            return mongoResult?.ToSport() ?? null;
+        }
+
+        /// <summary>
+        /// Replaces a Sport and all its elements.
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <param name="sport"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public static async Task<Sport> UpdateAsync(this IMongoCollection<SportPersistence> collection, SportPersistence sport, CancellationToken cancellationToken = default)
+        {
+            _ = await collection
+                .ReplaceOneAsync(s => s.Id.Equals(sport.Id), sport, new ReplaceOptions(), cancellationToken);
+            return sport.ToSport();
+        }
     }
 }
