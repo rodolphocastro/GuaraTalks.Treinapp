@@ -6,8 +6,27 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Treinapp.API.Features.Workouts;
+
 namespace Treinapp.API.Features.Sports
 {
+    /// <summary>
+    /// DAL / POCO for storage.
+    /// </summary>
+    public class SportPersistence
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public IEnumerable<WorkoutPersistence> Workouts { get; set; } = new HashSet<WorkoutPersistence>();
+
+        /// <summary>
+        /// Creates a Sport from this POCO.
+        /// </summary>
+        /// <returns></returns>
+        public Sport ToSport() => new(Id, Name, Description, Workouts.Select(w => w.ToWorkout()));
+    }
+
     /// <summary>
     /// Extensions related to storing Sports (the Domain Entity) on MongoDb.
     /// </summary>
@@ -17,22 +36,6 @@ namespace Treinapp.API.Features.Sports
         /// The collection name within Mongo.
         /// </summary>
         private const string SportsCollectionName = "sports";
-
-        /// <summary>
-        /// DAL / POCO for storage.
-        /// </summary>
-        public class SportPersistence
-        {
-            public Guid Id { get; set; }
-            public string Name { get; set; }
-            public string Description { get; set; }
-
-            /// <summary>
-            /// Creates a Sport from this POCO.
-            /// </summary>
-            /// <returns></returns>
-            public Sport ToSport() => new(Id, Name, Description);
-        }
 
         /// <summary>
         /// Creates a DAL / POCO from a Sport.
@@ -45,7 +48,8 @@ namespace Treinapp.API.Features.Sports
             {
                 Id = sport.Id,
                 Description = sport.Description,
-                Name = sport.Name
+                Name = sport.Name,
+                Workouts = sport.Workouts.Select(w => w.ToPersistence())
             };
         }
 
