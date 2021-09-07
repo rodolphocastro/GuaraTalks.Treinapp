@@ -1,3 +1,6 @@
+using CloudNative.CloudEvents;
+using CloudNative.CloudEvents.SystemTextJson;
+
 using Confluent.Kafka;
 
 using MediatR;
@@ -50,6 +53,7 @@ namespace Treinapp.API
                 };
                 return new ProducerBuilder<string, byte[]>(config).Build();
             });
+            services.AddSingleton<CloudEventFormatter>(new JsonEventFormatter());
         }
 
         /// <summary>
