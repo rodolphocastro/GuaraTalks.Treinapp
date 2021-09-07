@@ -20,21 +20,18 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://root:imroot@mongo.db:27017/
 
   zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    networks: 
-      - broker-kafka
+    image: confluentinc/cp-zookeeper:latest    
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
-    image: confluentinc/cp-kafka:latest
-    networks: 
-      - broker-kafka
+    image: confluentinc/cp-kafka:latest    
     depends_on:
       - zookeeper
     ports:
       - 9092:9092
+      - 29092:29092
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
@@ -44,9 +41,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
   kafdrop:
-    image: obsidiandynamics/kafdrop:latest
-    networks: 
-      - broker-kafka
+    image: obsidiandynamics/kafdrop:latest    
     depends_on:
       - kafka
     ports:
@@ -70,6 +65,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
       - ConnectionStrings__MongoDb=mongodb://root:imroot@mongo.db:27017/
+      - ConnectionStrings__KafkaBootstrap=kafka:29092
     ports:
       - "80"
       - "443"

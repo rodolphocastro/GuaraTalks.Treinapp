@@ -1,3 +1,5 @@
+using Confluent.Kafka;
+
 using MediatR;
 
 using Microsoft.AspNetCore.Builder;
@@ -24,11 +26,29 @@ namespace Treinapp.API
         public void ConfigureServices(IServiceCollection services)
         {
             AddMongoServices(services);
+            AddKafkaServices(services);
             services.AddMediatR(GetType().Assembly);
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Treinapp.API", Version = "v1" });
+            });
+        }
+
+        /// <summary>
+        /// Adds the services requred for working with Kafka.
+        /// This means registering IProducer<Null, string>.
+        /// </summary>
+        /// <param name="services"></param>
+        private void AddKafkaServices(IServiceCollection services)
+        {
+            services.AddSingleton(c =>
+            {
+                var config = new ProducerConfig
+                {
+                    BootstrapServers = Configuration.GetConnectionString(Constants.KafkaBootstrapKey),
+                };
+                return new ProducerBuilder<Null, string>(config).Build();
             });
         }
 
@@ -92,5 +112,10 @@ namespace Treinapp.API
         /// Default database for this API's entities.
         /// </summary>
         public const string MongoDatabase = @"TreinaApp-entities";
+
+        /// <summary>
+        /// Default key for the Kafka Bootstrap Connection String.
+        /// </summary>
+        public const string KafkaBootstrapKey = @"KafkaBootstrap";
     }
 }
