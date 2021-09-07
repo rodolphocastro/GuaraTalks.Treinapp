@@ -30,10 +30,10 @@ namespace Treinapp.API.Features.Workouts
 
     public class FinishWorkoutHandler : IRequestHandler<FinishWorkout, Workout>
     {
-        private readonly ILogger<StartWorkoutHandler> logger;
+        private readonly ILogger<FinishWorkoutHandler> logger;
         private readonly IMongoDatabase database;
 
-        public FinishWorkoutHandler(ILogger<StartWorkoutHandler> logger, IMongoDatabase database)
+        public FinishWorkoutHandler(ILogger<FinishWorkoutHandler> logger, IMongoDatabase database)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.database = database ?? throw new ArgumentNullException(nameof(database));
