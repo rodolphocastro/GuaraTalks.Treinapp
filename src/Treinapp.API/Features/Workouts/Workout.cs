@@ -11,7 +11,7 @@ namespace Treinapp.API.Features.Workouts
     /// <param name="BookedAt"></param>
     /// <param name="StartedAt"></param>
     /// <param name="FinishedAt"></param>
-    public record Workout(Guid Id, DateTimeOffset BookedAt, DateTimeOffset? StartedAt, DateTimeOffset? FinishedAt)
+    public record Workout(Guid Id, DateTimeOffset BookedAt, DateTimeOffset? StartedAt = null, DateTimeOffset? FinishedAt = null)
     {
         /// <summary>
         /// Whatever a Workout has been started.
