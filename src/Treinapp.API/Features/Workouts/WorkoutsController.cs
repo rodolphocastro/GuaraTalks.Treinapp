@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
 
+using Microsoft.AspNetCore.Mvc;
+
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Treinapp.API.Features.Workouts
@@ -8,33 +11,41 @@ namespace Treinapp.API.Features.Workouts
     [Route(Constants.DefaultRoute)]
     public class WorkoutsController : ControllerBase
     {
-        [HttpGet]
-        public async Task<IActionResult> ListAll()
+        private readonly ISender sender;
+        private CancellationToken Token => HttpContext?.RequestAborted ?? default;
+
+        public WorkoutsController(ISender sender)
         {
-            // TODO: Implement the Endpoint
-            return Ok();
+            this.sender = sender ?? throw new System.ArgumentNullException(nameof(sender));
+        }
+
+        [HttpGet("{SportId}")]
+        public async Task<IActionResult> ListAll([FromRoute] ListWorkouts query)
+        {
+            var result = await sender.Send(query, Token);
+            return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> BookNew()
+        public async Task<IActionResult> BookNew([FromBody] BookWorkout command)
         {
-            // TODO: Implement the Endpoint
-            return CreatedAtAction(nameof(ListAll), null);
+            var result = await sender.Send(command, Token);
+            return CreatedAtAction(nameof(ListAll), result);
         }
 
         [HttpPut("begin")]
-        public async Task<IActionResult> Begin()
+        public async Task<IActionResult> Begin([FromBody] StartWorkout command)
         {
-            // TODO: Implement the Endpoint
-            return AcceptedAtAction(nameof(ListAll), null);
+            var result = await sender.Send(command, Token);
+            return AcceptedAtAction(nameof(ListAll), result);
 
         }
 
         [HttpPut("finish")]
-        public async Task<IActionResult> Finish()
+        public async Task<IActionResult> Finish([FromBody] FinishWorkout command)
         {
-            // TODO: Implement the Endpoint
-            return AcceptedAtAction(nameof(ListAll), null);
+            var result = await sender.Send(command, Token);
+            return AcceptedAtAction(nameof(ListAll), result);
         }
     }
 }
