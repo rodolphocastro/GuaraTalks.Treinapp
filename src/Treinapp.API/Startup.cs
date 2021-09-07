@@ -48,7 +48,7 @@ namespace Treinapp.API
                 {
                     BootstrapServers = Configuration.GetConnectionString(Constants.KafkaBootstrapKey),
                 };
-                return new ProducerBuilder<Null, string>(config).Build();
+                return new ProducerBuilder<string, byte[]>(config).Build();
             });
         }
 
