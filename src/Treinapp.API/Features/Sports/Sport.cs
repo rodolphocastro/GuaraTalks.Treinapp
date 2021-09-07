@@ -37,5 +37,18 @@ namespace Treinapp.API.Features.Sports
                 Workouts = new HashSet<Workout>(Workouts.Where(w => w.Equals(workout)))
             };
         }
+
+        public Sport UpdateWorkout(Guid workoutId, Func<Workout, Workout> act)
+        {
+            var existingWorkout = Workouts.SingleOrDefault(w => w.Id.Equals(workoutId));
+            var updatedWorkout = act(existingWorkout);
+            return this with
+            {
+                Workouts = new HashSet<Workout>(
+                    Workouts
+                        .Where(w => !w.Equals(existingWorkout))
+                        .Append(updatedWorkout))
+            };
+        }
     }
 }

@@ -27,12 +27,12 @@ namespace Treinapp.API.Features.Workouts
         /// Starts a Workout session.
         /// </summary>
         /// <returns></returns>
-        public Workout Start() => this with { StartedAt = DateTimeOffset.UtcNow };
+        public Workout Start(DateTimeOffset? startedAt) => this with { StartedAt = startedAt ?? DateTimeOffset.UtcNow };
 
         /// <summary>
         /// Finishes a Workout session.
         /// </summary>
         /// <returns></returns>
-        public Workout Finish() => this with { FinishedAt = DateTimeOffset.UtcNow };
+        public Workout Finish(DateTimeOffset? finishedAt) => this with { FinishedAt = finishedAt ?? DateTimeOffset.UtcNow };
     }
 }
