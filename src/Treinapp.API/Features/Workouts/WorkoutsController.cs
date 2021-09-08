@@ -30,22 +30,21 @@ namespace Treinapp.API.Features.Workouts
         public async Task<IActionResult> BookNew([FromBody] BookWorkout command)
         {
             var result = await sender.Send(command, Token);
-            return CreatedAtAction(nameof(ListAll), result);
+            return Created("", result);
         }
 
         [HttpPut("begin")]
         public async Task<IActionResult> Begin([FromBody] StartWorkout command)
         {
             var result = await sender.Send(command, Token);
-            return AcceptedAtAction(nameof(ListAll), result);
-
+            return Accepted(result);
         }
 
         [HttpPut("finish")]
         public async Task<IActionResult> Finish([FromBody] FinishWorkout command)
         {
             var result = await sender.Send(command, Token);
-            return AcceptedAtAction(nameof(ListAll), result);
+            return Accepted(result);
         }
     }
 }
