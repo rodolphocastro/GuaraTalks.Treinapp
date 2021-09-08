@@ -51,6 +51,12 @@ namespace Treinapp.API.Features.Workouts
             var sport = await database
                 .GetSportsCollection()
                 .FetchAsync(request.SportId, cancellationToken);
+
+            if (sport is null)
+            {
+                return null;
+            }
+
             sport = sport.BookWorkout(workout);
             await database.GetSportsCollection().UpdateAsync(sport.ToPersistence(), cancellationToken);
             return workout;
@@ -81,6 +87,11 @@ namespace Treinapp.API.Features.Workouts
 
         public async Task Process(BookWorkout request, Workout response, CancellationToken cancellationToken)
         {
+            if (response is null)
+            {
+                return;
+            }
+
             logger.LogTrace("Publishing into Workout.Booked topic");
             var cloudEvent = new CloudEvent
             {

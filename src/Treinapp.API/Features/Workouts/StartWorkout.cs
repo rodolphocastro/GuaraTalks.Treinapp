@@ -45,12 +45,19 @@ namespace Treinapp.API.Features.Workouts
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.database = database ?? throw new ArgumentNullException(nameof(database));
         }
+
         public async Task<Workout> Handle(StartWorkout request, CancellationToken cancellationToken)
         {
             logger.LogTrace("Starting a workout");
             var sport = await database
                 .GetSportsCollection()
                 .FetchAsync(request.SportId, cancellationToken);
+
+            if (sport is null)
+            {
+                return null;
+            }
+
             sport = sport.UpdateWorkout(request.WorkoutId, w => w.Start(request.StartedAt));
             await database
                 .GetSportsCollection()
@@ -84,6 +91,11 @@ namespace Treinapp.API.Features.Workouts
 
         public async Task Process(StartWorkout request, Workout response, CancellationToken cancellationToken)
         {
+            if (response is null)
+            {
+                return;
+            }
+
             logger.LogTrace("Publishing into Workout.Started topic");
             var cloudEvent = new CloudEvent
             {
@@ -93,8 +105,7 @@ namespace Treinapp.API.Features.Workouts
                 Data = response
             };
 
-            await producer.ProduceAsync
-                (
+            await producer.ProduceAsync(
                 Constants.CloudEvents.WorkoutStartedTopic,
                 cloudEvent.ToKafkaMessage(ContentMode.Structured, cloudEventFormatter),
                 cancellationToken);

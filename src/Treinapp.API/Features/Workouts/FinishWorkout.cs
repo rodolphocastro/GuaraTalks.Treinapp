@@ -52,6 +52,12 @@ namespace Treinapp.API.Features.Workouts
             var sport = await database
                 .GetSportsCollection()
                 .FetchAsync(request.SportId, cancellationToken);
+
+            if (sport is null)
+            {
+                return null;
+            }
+
             sport = sport.UpdateWorkout(request.WorkoutId, w => w.Finish(request.FinishedAt));
             await database
                 .GetSportsCollection()
@@ -84,6 +90,11 @@ namespace Treinapp.API.Features.Workouts
 
         public async Task Process(FinishWorkout request, Workout response, CancellationToken cancellationToken)
         {
+            if (response is null)
+            {
+                return;
+            }
+
             logger.LogTrace("Publishing into Workout.Finished topic");
             var cloudEvent = new CloudEvent
             {
@@ -99,5 +110,5 @@ namespace Treinapp.API.Features.Workouts
                 cloudEvent.ToKafkaMessage(ContentMode.Structured, cloudEventFormatter),
                 cancellationToken);
         }
-    }    
+    }
 }

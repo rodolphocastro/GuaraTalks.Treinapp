@@ -1,4 +1,6 @@
 ﻿
+using MongoDB.Driver;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +43,10 @@ namespace Treinapp.API.Features.Sports
         public Sport UpdateWorkout(Guid workoutId, Func<Workout, Workout> act)
         {
             var existingWorkout = Workouts.SingleOrDefault(w => w.Id.Equals(workoutId));
+
+            if (existingWorkout == null)
+                return this;
+
             var updatedWorkout = act(existingWorkout);
             return this with
             {

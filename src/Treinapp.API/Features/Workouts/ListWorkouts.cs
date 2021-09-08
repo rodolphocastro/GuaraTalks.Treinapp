@@ -1,6 +1,5 @@
 ﻿using MediatR;
 
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 using MongoDB.Driver;
@@ -18,7 +17,7 @@ namespace Treinapp.API.Features.Workouts
     /// Query to list all Workouts of a sport.
     /// </summary>
     public class ListWorkouts : IRequest<IEnumerable<Workout>>
-    {        
+    {
         public Guid SportId { get; set; }
     }
 
@@ -39,7 +38,7 @@ namespace Treinapp.API.Features.Workouts
             var sport = await database
                 .GetSportsCollection()
                 .FetchAsync(request.SportId, cancellationToken);
-            return sport.Workouts;
+            return sport?.Workouts ?? null;
         }
     }
 }
