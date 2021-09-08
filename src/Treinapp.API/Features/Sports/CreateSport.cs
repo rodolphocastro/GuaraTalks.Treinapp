@@ -6,6 +6,7 @@ using Confluent.Kafka;
 using MediatR;
 using MediatR.Pipeline;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 using MongoDB.Driver;
@@ -66,12 +67,14 @@ namespace Treinapp.API.Features.Sports
         private readonly ILogger<PublishSportCreated> logger;
         private readonly IProducer<string, byte[]> producer;
         private readonly CloudEventFormatter cloudEventFormatter;
+        private readonly string requestSource;
 
-        public PublishSportCreated(ILogger<PublishSportCreated> logger, IProducer<string, byte[]> producer, CloudEventFormatter cloudEventFormatter)
+        public PublishSportCreated(ILogger<PublishSportCreated> logger, IProducer<string, byte[]> producer, CloudEventFormatter cloudEventFormatter, IHttpContextAccessor context)
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.producer = producer ?? throw new ArgumentNullException(nameof(producer));
-            this.cloudEventFormatter = cloudEventFormatter ?? throw new ArgumentNullException(nameof(cloudEventFormatter));
+            this.cloudEventFormatter = cloudEventFormatter ?? throw new ArgumentNullException(nameof(cloudEventFormatter));            
+            requestSource = context?.HttpContext?.Request.Host.Value ?? throw new ArgumentNullException(nameof(context));
         }
         public async Task Process(CreateSport request, Sport response, CancellationToken cancellationToken)
         {
@@ -79,12 +82,12 @@ namespace Treinapp.API.Features.Sports
             var cloudEvent = new CloudEvent()
             {
                 Id = Guid.NewGuid().ToString(),
-                Type = "treinapp.sports.v1.created",
-                Source = new Uri("http://treinapp.com/api"),
+                Type = Constants.CloudEvents.SportCreatedType,
+                Source = new Uri(requestSource),
                 Data = response
             };
 
-            await producer.ProduceAsync("sport.created", cloudEvent.ToKafkaMessage(ContentMode.Structured, cloudEventFormatter), cancellationToken);
+            await producer.ProduceAsync(Constants.CloudEvents.SportCreatedTopic, cloudEvent.ToKafkaMessage(ContentMode.Structured, cloudEventFormatter), cancellationToken);
         }
     }
 }

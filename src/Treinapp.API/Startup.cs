@@ -30,6 +30,7 @@ namespace Treinapp.API
         {
             AddMongoServices(services);
             AddKafkaServices(services);
+            services.AddHttpContextAccessor();
             services.AddMediatR(GetType().Assembly);
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -121,5 +122,11 @@ namespace Treinapp.API
         /// Default key for the Kafka Bootstrap Connection String.
         /// </summary>
         public const string KafkaBootstrapKey = @"KafkaBootstrap";
+
+        public static class CloudEvents
+        {
+            public const string SportCreatedTopic = "sport.created";
+            public const string SportCreatedType = "treinapp.sports.v1.created";
+        }
     }
 }
