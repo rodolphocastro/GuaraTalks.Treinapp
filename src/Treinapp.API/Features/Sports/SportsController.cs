@@ -32,6 +32,7 @@ namespace Treinapp.API.Features.Sports
 
         [HttpPost]
         [ProducesResponseType(typeof(Sport), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateNew([FromBody] CreateSport command)
         {
             var result = await sender.Send(command, Token);

@@ -76,7 +76,7 @@ namespace Treinapp.API.Features.Sports
             this.cloudEventFormatter = cloudEventFormatter ?? throw new ArgumentNullException(nameof(cloudEventFormatter));
             requestSource = context?.HttpContext?.Request.Host.Value ?? throw new ArgumentNullException(nameof(context));
         }
-        
+
         public async Task Process(CreateSport request, Sport response, CancellationToken cancellationToken)
         {
             logger.LogTrace("Publishing into Sport.Created topic");
