@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace Treinapp.Commons.Domain
 {
@@ -12,12 +13,13 @@ namespace Treinapp.Commons.Domain
     /// <param name="Description">A short description of the sport</param>
     public record Sport(Guid Id, string Name, string Description)
     {
+        [JsonConstructor]
         public Sport(Guid id, string name, string description, IEnumerable<Workout> workouts) : this(id, name, description)
         {
-            Workouts = new HashSet<Workout>(workouts) ?? throw new ArgumentNullException(nameof(workouts));
+            Workouts = new HashSet<Workout>(workouts) ?? new HashSet<Workout>();
         }
 
-        public IEnumerable<Workout> Workouts { get; private set; } = new HashSet<Workout>();
+        public IEnumerable<Workout> Workouts { get; private set; }
 
         public Sport BookWorkout(Workout workout)
         {

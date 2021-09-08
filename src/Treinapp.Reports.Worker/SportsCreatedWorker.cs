@@ -1,5 +1,6 @@
 using CloudNative.CloudEvents;
 using CloudNative.CloudEvents.Kafka;
+using CloudNative.CloudEvents.SystemTextJson;
 
 using Confluent.Kafka;
 
@@ -13,6 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Treinapp.Common;
+using Treinapp.Commons.Domain;
 
 namespace Treinapp.Reports.Worker
 {
@@ -20,16 +22,14 @@ namespace Treinapp.Reports.Worker
     {
         private readonly ILogger<SportsCreatedWorker> _logger;
         private readonly IServiceProvider serviceProvider;
-        private readonly CloudEventFormatter cloudEventFormatter;
+        private readonly CloudEventFormatter cloudEventFormatter = new JsonEventFormatter<Sport>();
 
         public SportsCreatedWorker(
             ILogger<SportsCreatedWorker> logger,
-            IServiceProvider serviceProvider,
-            CloudEventFormatter cloudEventFormatter)
+            IServiceProvider serviceProvider)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-            this.cloudEventFormatter = cloudEventFormatter ?? throw new ArgumentNullException(nameof(cloudEventFormatter));
+            this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));            
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -45,11 +45,18 @@ namespace Treinapp.Reports.Worker
                 {
                     var result = consumer.Consume(stoppingToken);
                     var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
-                    
+                    if (cloudEvent.Data is Sport createdSport)
+                    {
+                        _logger.LogInformation("Received a sport!");
+                    }                    
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Unable to parse CloudEvent");
                 }
                 finally
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
+                    await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
                 }
 
             }
