@@ -73,9 +73,10 @@ namespace Treinapp.API.Features.Sports
         {
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.producer = producer ?? throw new ArgumentNullException(nameof(producer));
-            this.cloudEventFormatter = cloudEventFormatter ?? throw new ArgumentNullException(nameof(cloudEventFormatter));            
+            this.cloudEventFormatter = cloudEventFormatter ?? throw new ArgumentNullException(nameof(cloudEventFormatter));
             requestSource = context?.HttpContext?.Request.Host.Value ?? throw new ArgumentNullException(nameof(context));
         }
+        
         public async Task Process(CreateSport request, Sport response, CancellationToken cancellationToken)
         {
             logger.LogTrace("Publishing into Sport.Created topic");
@@ -87,7 +88,10 @@ namespace Treinapp.API.Features.Sports
                 Data = response
             };
 
-            await producer.ProduceAsync(Constants.CloudEvents.SportCreatedTopic, cloudEvent.ToKafkaMessage(ContentMode.Structured, cloudEventFormatter), cancellationToken);
+            await producer.ProduceAsync(
+                Constants.CloudEvents.SportCreatedTopic,
+                cloudEvent.ToKafkaMessage(ContentMode.Structured, cloudEventFormatter),
+                cancellationToken);
         }
     }
 }

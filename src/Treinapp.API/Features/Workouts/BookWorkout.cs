@@ -1,7 +1,14 @@
-﻿using DnsClient.Internal;
+﻿using CloudNative.CloudEvents;
+using CloudNative.CloudEvents.Kafka;
+
+using Confluent.Kafka;
+
+using DnsClient.Internal;
 
 using MediatR;
+using MediatR.Pipeline;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
 using MongoDB.Driver;
@@ -47,6 +54,46 @@ namespace Treinapp.API.Features.Workouts
             sport = sport.BookWorkout(workout);
             await database.GetSportsCollection().UpdateAsync(sport.ToPersistence(), cancellationToken);
             return workout;
+        }
+    }
+
+    /// <summary>
+    /// Handler for publishing that a Workout was booked.
+    /// </summary>
+    public class PublishWorkoutBooked : IRequestPostProcessor<BookWorkout, Workout>
+    {
+        private readonly ILogger<PublishWorkoutBooked> logger;
+        private readonly IProducer<string, byte[]> producer;
+        private readonly CloudEventFormatter cloudEventFormatter;
+        private readonly string requestSource;
+
+        public PublishWorkoutBooked(
+            ILogger<PublishWorkoutBooked> logger,
+            IProducer<string, byte[]> producer,
+            CloudEventFormatter cloudEventFormatter,
+            IHttpContextAccessor httpContextAccessor)
+        {
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            this.producer = producer ?? throw new ArgumentNullException(nameof(producer));
+            this.cloudEventFormatter = cloudEventFormatter ?? throw new ArgumentNullException(nameof(cloudEventFormatter));
+            requestSource = httpContextAccessor?.HttpContext?.Request.Host.Value ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+        }
+
+        public async Task Process(BookWorkout request, Workout response, CancellationToken cancellationToken)
+        {
+            logger.LogTrace("Publishing into Workout.Booked topic");
+            var cloudEvent = new CloudEvent
+            {
+                Id = Guid.NewGuid().ToString(),
+                Type = Constants.CloudEvents.WorkoutBookedType,
+                Source = new Uri(requestSource),
+                Data = response
+            };
+
+            await producer.ProduceAsync(
+                Constants.CloudEvents.WorkoutBookedTopic,
+                cloudEvent.ToKafkaMessage(ContentMode.Structured, cloudEventFormatter),
+                cancellationToken);
         }
     }
 }
