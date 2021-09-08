@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Treinapp.Commons.Domain;
+
 namespace Treinapp.API.Features.Sports
 {
     /// <summary>

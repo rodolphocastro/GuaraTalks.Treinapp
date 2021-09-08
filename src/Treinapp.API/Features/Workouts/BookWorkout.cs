@@ -19,6 +19,8 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Treinapp.API.Features.Sports;
+using Treinapp.Common;
+using Treinapp.Commons.Domain;
 
 namespace Treinapp.API.Features.Workouts
 {

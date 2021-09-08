@@ -16,6 +16,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Treinapp.Common;
+using Treinapp.Commons.Domain;
+
 namespace Treinapp.API.Features.Sports
 {
     /// <summary>

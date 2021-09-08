@@ -1,13 +1,8 @@
-﻿
-using MongoDB.Driver;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Treinapp.API.Features.Workouts;
-
-namespace Treinapp.API.Features.Sports
+namespace Treinapp.Commons.Domain
 {
     /// <summary>
     /// A Sport controller by this API.

@@ -6,7 +6,6 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
 COPY ["src/Treinapp.Reports.Worker/Treinapp.Reports.Worker.csproj", "src/Treinapp.Reports.Worker/"]
-COPY ["src/Treinapp.Common/Treinapp.Common.csproj", "src/Treinapp.Common/"]
 RUN dotnet restore "src/Treinapp.Reports.Worker/Treinapp.Reports.Worker.csproj"
 COPY . .
 WORKDIR "/src/src/Treinapp.Reports.Worker"
