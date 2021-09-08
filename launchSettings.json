@@ -1,0 +1,21 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "kafdrop": "StartWithoutDebugging",
+        "kafka": "StartWithoutDebugging",
+        "mongo.db": "StartWithoutDebugging",
+        "mongo.explorer": "StartWithoutDebugging",
+        "redis": "StartWithoutDebugging",
+        "redis.commander": "StartWithoutDebugging",
+        "treinapp.api": "StartDebugging",
+        "treinapp.reports.api": "StartDebugging",
+        "treinapp.reports.portal": "StartDebugging",
+        "treinapp.reports.worker": "StartDebugging",
+        "zookeeper": "StartWithoutDebugging"
+      }
+    }
+  }
+}
