@@ -16,9 +16,14 @@
         public const string MongoConnectionKey = @"MongoDb";
 
         /// <summary>
-        /// Default database for this API's entities.
+        /// Default database for the API's entities.
         /// </summary>
-        public const string MongoDatabase = @"TreinaApp-entities";
+        public const string MongoCrudDatabase = @"TreinaApp-entities";
+
+        /// <summary>
+        /// Default database for the Worker's entities.
+        /// </summary>
+        public const string MongoReportsDatabase = @"TreinaApp-reports";
 
         /// <summary>
         /// Default key for the Kafka Bootstrap Connection String.

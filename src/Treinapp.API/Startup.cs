@@ -73,7 +73,7 @@ namespace Treinapp.API
             services.AddScoped(sp =>
             {
                 var mongoClient = sp.GetRequiredService<MongoClient>();
-                return mongoClient.GetDatabase(Constants.MongoDatabase);
+                return mongoClient.GetDatabase(Constants.MongoCrudDatabase);
             });
         }
 
