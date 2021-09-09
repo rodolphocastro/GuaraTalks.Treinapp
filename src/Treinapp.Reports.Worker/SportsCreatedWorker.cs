@@ -47,12 +47,15 @@ namespace Treinapp.Reports.Worker
                     var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
                     if (cloudEvent.Data is Sport createdSport)
                     {
+                        // TODO: Actually persist the sport
                         _logger.LogInformation("Received a sport!");
                     }                    
                 }
-                catch (Exception e)
+                // Consumer errors should generally be ignored (or logged) unless fatal.
+                catch (ConsumeException e) when (e.Error.IsFatal)
                 {
-                    _logger.LogError(e, "Unable to parse CloudEvent");
+                    _logger.LogError(e, "A fatal consumer error happened");
+                    throw;
                 }
                 finally
                 {
