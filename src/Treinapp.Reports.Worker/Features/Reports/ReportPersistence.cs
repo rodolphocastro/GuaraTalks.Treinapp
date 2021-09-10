@@ -48,7 +48,7 @@ namespace Treinapp.Reports.Worker.Features.Reports
         /// </summary>
         /// <param name="mongoDb"></param>
         /// <returns></returns>
-        public static IMongoCollection<ReportPersistence> GetSportsCollection(this IMongoDatabase mongoDb) => mongoDb.GetCollection<ReportPersistence>(SportsCollectionName);
+        public static IMongoCollection<ReportPersistence> GetReportsCollection(this IMongoDatabase mongoDb) => mongoDb.GetCollection<ReportPersistence>(SportsCollectionName);
 
         /// <summary>
         /// Inserts a new Report into the collection.
@@ -77,7 +77,7 @@ namespace Treinapp.Reports.Worker.Features.Reports
             CancellationToken cancellationToken = default)
         {
             var mongoResult = await collection
-                .Find(s => s.ForDay.Date.Equals(forDay.Date))
+                .Find(s => s.ForDay.Equals(forDay.Date))
                 .SingleOrDefaultAsync(cancellationToken);
             return mongoResult?.ToReport() ?? null;
         }
