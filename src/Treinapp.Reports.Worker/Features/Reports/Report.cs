@@ -39,7 +39,10 @@ namespace Treinapp.Reports.Worker.Features.Reports
 
             return this with
             {
-                CreatedSports = new HashSet<Sport>(CreatedSports).Append(sport)
+                CreatedSports = new HashSet<Sport>
+                    (CreatedSports
+                        .Where(s => !s.Id.Equals(sport.Id))
+                    .Append(sport))
             };
         }
     }
