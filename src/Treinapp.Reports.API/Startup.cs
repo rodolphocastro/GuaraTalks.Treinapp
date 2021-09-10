@@ -1,16 +1,14 @@
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
+using MongoDB.Driver;
+
+using Treinapp.Common;
+using Treinapp.Reports.API.Features.Reports;
 
 namespace Treinapp.Reports.API
 {
@@ -26,11 +24,29 @@ namespace Treinapp.Reports.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            AddMongoServices(services);
+            services.AddGraphQLServer()
+                .AddQueryType<ReportsQuery>()
+                .AddMongoDbFiltering()
+                .AddMongoDbProjections()
+                .AddMongoDbSorting();
+        }
 
-            services.AddControllers();
-            services.AddSwaggerGen(c =>
+        /// <summary>
+        /// Adds the services required for working with MongoDB.
+        /// This means registering MongoClient as a Singleton and IMongoDatabase as a Scoped.
+        /// </summary>
+        /// <param name="services"></param>
+        private void AddMongoServices(IServiceCollection services)
+        {
+            services.AddSingleton(_ =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Treinapp.Reports.API", Version = "v1" });
+                return new MongoClient(Configuration.GetConnectionString(Constants.MongoConnectionKey));
+            });
+            services.AddScoped(sp =>
+            {
+                var mongoClient = sp.GetRequiredService<MongoClient>();
+                return mongoClient.GetDatabase(Constants.MongoReportsDatabase);
             });
         }
 
@@ -40,20 +56,18 @@ namespace Treinapp.Reports.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Treinapp.Reports.API v1"));
             }
 
             app.UseHttpsRedirection();
 
-            app.UseRouting();
-
-            app.UseAuthorization();
+            app.UseRouting();            
 
             app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
+            {                
+                endpoints.MapGraphQL();
             });
+
+            app.UseGraphQLGraphiQL();
         }
     }
 }

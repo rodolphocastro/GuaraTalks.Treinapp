@@ -14,16 +14,6 @@ namespace Treinapp.Commons.Domain
     public record Workout(Guid Id, DateTimeOffset BookedAt, DateTimeOffset? StartedAt = null, DateTimeOffset? FinishedAt = null)
     {
         /// <summary>
-        /// Whatever a Workout has been started.
-        /// </summary>
-        public bool IsStarted => StartedAt.HasValue;
-
-        /// <summary>
-        /// Whatever a Workout has been finished.
-        /// </summary>
-        public bool IsFinished => FinishedAt.HasValue;
-
-        /// <summary>
         /// Starts a Workout session.
         /// </summary>
         /// <returns></returns>
