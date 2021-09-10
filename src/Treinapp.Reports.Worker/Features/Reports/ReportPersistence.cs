@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Treinapp.Common.Domain;
 using Treinapp.Commons.Domain;
 
 namespace Treinapp.Reports.Worker.Features.Reports

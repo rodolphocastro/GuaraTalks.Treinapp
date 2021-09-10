@@ -4,7 +4,7 @@ using System.Linq;
 
 using Treinapp.Commons.Domain;
 
-namespace Treinapp.Reports.Worker.Features.Reports
+namespace Treinapp.Common.Domain
 {
     public record Report
     {
