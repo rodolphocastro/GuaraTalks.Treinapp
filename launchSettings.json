@@ -2,6 +2,9 @@
   "profiles": {
     "Docker Compose": {
       "commandName": "DockerCompose",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "treinapp.api",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}/swagger",
       "commandVersion": "1.0",
       "serviceActions": {
         "kafdrop": "StartWithoutDebugging",
