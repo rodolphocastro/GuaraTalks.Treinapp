@@ -1,13 +1,9 @@
-﻿
-using MongoDB.Driver;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 
-using Treinapp.API.Features.Workouts;
-
-namespace Treinapp.API.Features.Sports
+namespace Treinapp.Commons.Domain
 {
     /// <summary>
     /// A Sport controller by this API.
@@ -17,12 +13,13 @@ namespace Treinapp.API.Features.Sports
     /// <param name="Description">A short description of the sport</param>
     public record Sport(Guid Id, string Name, string Description)
     {
+        [JsonConstructor]
         public Sport(Guid id, string name, string description, IEnumerable<Workout> workouts) : this(id, name, description)
         {
-            Workouts = new HashSet<Workout>(workouts) ?? throw new ArgumentNullException(nameof(workouts));
+            Workouts = new HashSet<Workout>(workouts) ?? new HashSet<Workout>();
         }
 
-        public IEnumerable<Workout> Workouts { get; private set; } = new HashSet<Workout>();
+        public IEnumerable<Workout> Workouts { get; private set; }
 
         public Sport BookWorkout(Workout workout)
         {

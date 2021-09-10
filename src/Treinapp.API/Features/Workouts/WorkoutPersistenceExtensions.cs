@@ -1,6 +1,8 @@
 ﻿
 using System;
 
+using Treinapp.Commons.Domain;
+
 namespace Treinapp.API.Features.Workouts
 {
     public class WorkoutPersistence

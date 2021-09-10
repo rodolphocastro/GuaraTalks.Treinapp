@@ -74,6 +74,9 @@ services:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
   
   treinapp.reports.worker:
+    environment:
+      - ConnectionStrings__MongoDb=mongodb://root:imroot@mongo.db:27017/
+      - ConnectionStrings__KafkaBootstrap=kafka:29092
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
@@ -97,8 +100,4 @@ services:
       - "443"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
-
-networks: 
-  broker-kafka:
-    driver: bridge  
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro  

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Treinapp.API.Features.Workouts
+namespace Treinapp.Commons.Domain
 {
     /// <summary>
     /// A Workout controlled by this API,
