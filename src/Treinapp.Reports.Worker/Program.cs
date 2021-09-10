@@ -49,10 +49,9 @@ namespace Treinapp.Reports.Worker
                             AutoOffsetReset = AutoOffsetReset.Earliest
                         };
                         return new ConsumerBuilder<string, byte[]>(config).Build();
-                    });
-                    services.AddSingleton<CloudEventFormatter>(new JsonEventFormatter());
-
+                    });                    
                     services.AddHostedService<SportsCreatedWorker>();
+                    services.AddHostedService<WorkoutBookedWorker>();
                 });
         }
     }    

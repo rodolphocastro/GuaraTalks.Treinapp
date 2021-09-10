@@ -15,12 +15,12 @@ namespace Treinapp.Reports.Worker
 {
     public abstract class KafkaConsumerWorker : BackgroundService
     {
-        protected readonly ILogger<SportsCreatedWorker> _logger;
+        protected readonly ILogger<KafkaConsumerWorker> _logger;
         protected readonly IServiceProvider serviceProvider;
         protected readonly CloudEventFormatter cloudEventFormatter;
         protected IConsumer<string, byte[]> KafkaConsumer { get; private set; } = null;
 
-        public KafkaConsumerWorker(ILogger<SportsCreatedWorker> logger,
+        public KafkaConsumerWorker(ILogger<KafkaConsumerWorker> logger,
             IServiceProvider serviceProvider,
             CloudEventFormatter formatter = null)
         {
@@ -35,13 +35,14 @@ namespace Treinapp.Reports.Worker
             KafkaConsumer = serviceProvider
                 .CreateScope().ServiceProvider
                 .GetRequiredService<IConsumer<string, byte[]>>();
-            return DoScoped(stoppingToken);
+            return Task.Run(() => DoScoped(stoppingToken), stoppingToken);  // HACK: This is required so we can have multiple services running in parallel
         }
 
         protected abstract Task DoScoped(CancellationToken cancellationToken);
 
         public override void Dispose()
         {
+            GC.SuppressFinalize(this);
             KafkaConsumer?.Dispose();
             base.Dispose();
         }

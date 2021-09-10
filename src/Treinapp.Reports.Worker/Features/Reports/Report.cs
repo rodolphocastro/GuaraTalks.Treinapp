@@ -45,5 +45,20 @@ namespace Treinapp.Reports.Worker.Features.Reports
                     .Append(sport))
             };
         }
+
+        public Report WithBookedWorkout(Workout workout)
+        {
+            if (workout is null)
+            {
+                throw new ArgumentNullException(nameof(workout));
+            }
+
+            return this with
+            {
+                BookedWorkouts = BookedWorkouts
+                    .Where(w => !w.Id.Equals(workout.Id))
+                    .Append(workout)
+            };
+        }
     }
 }
