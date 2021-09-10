@@ -1,11 +1,9 @@
-using CloudNative.CloudEvents;
 using CloudNative.CloudEvents.Kafka;
 using CloudNative.CloudEvents.SystemTextJson;
 
 using Confluent.Kafka;
 
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 using MongoDB.Driver;
@@ -20,43 +18,38 @@ using Treinapp.Reports.Worker.Features.Reports;
 
 namespace Treinapp.Reports.Worker
 {
-    public class SportsCreatedWorker : BackgroundService
+    public class SportsCreatedWorker : KafkaConsumerWorker
     {
-        private readonly ILogger<SportsCreatedWorker> _logger;
         private readonly IMongoDatabase database;
-        private readonly IServiceProvider serviceProvider;
-        private readonly CloudEventFormatter cloudEventFormatter = new JsonEventFormatter<Sport>();
 
         public SportsCreatedWorker(
             ILogger<SportsCreatedWorker> logger,
             IMongoDatabase database,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider) : base(logger, serviceProvider, new JsonEventFormatter<Sport>())
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             this.database = database ?? throw new ArgumentNullException(nameof(database));
-            this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task DoScoped(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Starting Sports.created consumer");
-            using var consumer = serviceProvider
-                .CreateScope().ServiceProvider
-                    .GetRequiredService<IConsumer<string, byte[]>>();
+            if (KafkaConsumer is null)
+            {
+                throw new ArgumentException("For some reason the Consumer is null, this shouldn't happen.");
+            }
 
-            consumer.Subscribe(Constants.CloudEvents.SportCreatedTopic);
-            while (!stoppingToken.IsCancellationRequested)
+            KafkaConsumer.Subscribe(Constants.CloudEvents.SportCreatedTopic);
+            while (!cancellationToken.IsCancellationRequested)
             {
                 try
                 {
-                    var result = consumer.Consume(stoppingToken);
+                    var result = KafkaConsumer.Consume(cancellationToken);
                     var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
                     if (cloudEvent.Data is Sport createdSport)
                     {
                         _logger.LogTrace("Attempting to update a report with the new sport");
                         var report = await database
                             .GetReportsCollection()
-                            .FetchAsync(DateTimeOffset.UtcNow, stoppingToken);
+                            .FetchAsync(DateTimeOffset.UtcNow, cancellationToken);
                         if (report is null)
                         {
                             report = await database
@@ -66,7 +59,7 @@ namespace Treinapp.Reports.Worker
                         report = report.WithCreatedSport(createdSport);
                         await database
                             .GetReportsCollection()
-                            .UpdateAsync(report, stoppingToken);
+                            .UpdateAsync(report, cancellationToken);
                     }
                 }
                 // Consumer errors should generally be ignored (or logged) unless fatal.
@@ -81,11 +74,11 @@ namespace Treinapp.Reports.Worker
                 }
                 finally
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
+                    await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
                 }
 
             }
-            consumer.Unsubscribe();
-        }
+            KafkaConsumer.Unsubscribe();
+        }        
     }
 }
