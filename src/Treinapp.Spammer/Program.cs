@@ -30,6 +30,7 @@ namespace Treinapp.Spammer
                     var configuration = hostContext.Configuration;
                     services.AddSingleton<ICollection<Sport>>(new HashSet<Sport>());
                     services.AddSingleton<Faker<CreateSportPayload>, SportBogusGenerator>();
+                    services.AddSingleton<Faker<BookWorkoutPayload>, BookWorkoutPayloadGenerator>();
                     services.AddMediatR(typeof(Program).Assembly);
                     services
                         .AddRefitClient<ITreinappApi>()
