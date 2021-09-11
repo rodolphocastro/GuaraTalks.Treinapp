@@ -26,6 +26,7 @@ namespace Treinapp.Reports.API
         public void ConfigureServices(IServiceCollection services)
         {
             AddMongoServices(services);
+            services.AddHealthChecks();
             services.Configure<ForwardedHeadersOptions>(fwh =>
             {
                 fwh.ForwardedHeaders = ForwardedHeaders.All;
@@ -75,6 +76,7 @@ namespace Treinapp.Reports.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGraphQL();
+                endpoints.MapHealthChecks("/health");
             });
 
             app.UseGraphQLGraphiQL();
