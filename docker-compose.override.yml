@@ -69,9 +69,12 @@ services:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
   
   treinapp.reports.worker:
+    ports:
+      - "7777:7777"
     environment:
       - ConnectionStrings__MongoDb=mongodb://root:imroot@mongo.db:27017/
       - ConnectionStrings__KafkaBootstrap=kafka:29092
+      - HeartbeatConfiguration__TcpPort=7777
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 

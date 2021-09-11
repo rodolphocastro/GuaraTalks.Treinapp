@@ -3,7 +3,6 @@ using CloudNative.CloudEvents.SystemTextJson;
 
 using Confluent.Kafka;
 
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using MongoDB.Driver;
@@ -80,6 +79,6 @@ namespace Treinapp.Reports.Worker
 
             }
             KafkaConsumer.Unsubscribe();
-        }        
+        }
     }
 }
