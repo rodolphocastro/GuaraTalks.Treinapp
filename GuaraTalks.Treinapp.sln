@@ -30,6 +30,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{0CD7E9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Treinapp.Common", "src\Treinapp.Common\Treinapp.Common.csproj", "{7DCEC5C1-B415-4030-A61D-4739C02507A0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treinapp.Spammer", "src\Treinapp.Spammer\Treinapp.Spammer.csproj", "{744DB311-11A5-4C86-A6FF-B23C640D5DA9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +62,10 @@ Global
 		{7DCEC5C1-B415-4030-A61D-4739C02507A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DCEC5C1-B415-4030-A61D-4739C02507A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DCEC5C1-B415-4030-A61D-4739C02507A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{744DB311-11A5-4C86-A6FF-B23C640D5DA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{744DB311-11A5-4C86-A6FF-B23C640D5DA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{744DB311-11A5-4C86-A6FF-B23C640D5DA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{744DB311-11A5-4C86-A6FF-B23C640D5DA9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +75,7 @@ Global
 		{5C7AD2BB-5763-438A-9489-D23B8AE009DA} = {0403D07E-9E1B-4FE9-B89F-46BC960B6EA0}
 		{037EA197-ED1E-48C1-89D8-B2ECFA733A8F} = {0403D07E-9E1B-4FE9-B89F-46BC960B6EA0}
 		{A280BC7F-9A02-4F5D-A9C8-8E7640AE4788} = {0403D07E-9E1B-4FE9-B89F-46BC960B6EA0}
+		{744DB311-11A5-4C86-A6FF-B23C640D5DA9} = {A3F90565-D64F-42A5-9F50-CDB7235C9F8C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A42F0526-F885-44C6-8B13-DE3CAC9C60EE}

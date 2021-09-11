@@ -102,3 +102,9 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro  
+  
+  treinapp.spammer:
+    environment:
+      - "ConnectionStrings__TreinappApi=https://treinapp.api"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro

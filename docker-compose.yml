@@ -27,3 +27,10 @@ services:
       context: .
       dockerfile: src/Treinapp.Reports.API/Dockerfile
 
+
+  treinapp.spammer:
+    image: ${DOCKER_REGISTRY-}treinappspammer
+    build:
+      context: .
+      dockerfile: src/Treinapp.Spammer/Dockerfile
+
