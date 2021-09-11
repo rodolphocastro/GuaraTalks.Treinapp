@@ -1,5 +1,18 @@
+using Bogus;
+
+using MediatR;
+
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
+using Refit;
+
+using System;
+using System.Collections.Generic;
+
+using Treinapp.Commons.Domain;
+using Treinapp.Spammer.Features;
 
 namespace Treinapp.Spammer
 {
@@ -15,8 +28,12 @@ namespace Treinapp.Spammer
                 .ConfigureServices((hostContext, services) =>
                 {
                     var configuration = hostContext.Configuration;
-                    // TODO: Setup MediatR
-                    // TODO: Setup Refit
+                    services.AddSingleton<ICollection<Sport>>(new HashSet<Sport>());
+                    services.AddSingleton<Faker<CreateSportPayload>, SportBogusGenerator>();
+                    services.AddMediatR(typeof(Program).Assembly);
+                    services
+                        .AddRefitClient<ITreinappApi>()
+                        .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration.GetConnectionString("TreinappApi")));
                     services.AddHostedService<Worker>();
                 });
     }
