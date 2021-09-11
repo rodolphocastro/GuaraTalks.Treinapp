@@ -6,17 +6,27 @@ using Treinapp.Commons.Domain;
 
 namespace Treinapp.Common.Domain
 {
+    public record ReportedSport : Sport
+    {
+        public ReportedSport(Sport original, DateTimeOffset reportedAt) : base(original)
+        {
+            ReportedAt = reportedAt;
+        }
+
+        public DateTimeOffset ReportedAt { get; init; }
+    }
+
     public record Report
     {
         public Report(Guid id,
-            IEnumerable<Sport> createdSports = null,
+            IEnumerable<ReportedSport> createdSports = null,
             IEnumerable<Workout> bookedWorkouts = null,
             IEnumerable<Workout> startedWorkouts = null,
             IEnumerable<Workout> finishedWorkouts = null,
             DateTimeOffset? ForDay = null)
         {
             Id = id;
-            CreatedSports = createdSports ?? Enumerable.Empty<Sport>();
+            CreatedSports = createdSports ?? Enumerable.Empty<ReportedSport>();
             BookedWorkouts = bookedWorkouts ?? Enumerable.Empty<Workout>();
             StartedWorkouts = startedWorkouts ?? Enumerable.Empty<Workout>();
             FinishedWorkouts = finishedWorkouts ?? Enumerable.Empty<Workout>();
@@ -24,7 +34,7 @@ namespace Treinapp.Common.Domain
         }
 
         public Guid Id { get; }
-        public IEnumerable<Sport> CreatedSports { get; init; }
+        public IEnumerable<ReportedSport> CreatedSports { get; init; }
         public IEnumerable<Workout> BookedWorkouts { get; init; }
         public IEnumerable<Workout> StartedWorkouts { get; init; }
         public IEnumerable<Workout> FinishedWorkouts { get; init; }
@@ -39,10 +49,10 @@ namespace Treinapp.Common.Domain
 
             return this with
             {
-                CreatedSports = new HashSet<Sport>
+                CreatedSports = new HashSet<ReportedSport>
                     (CreatedSports
                         .Where(s => !s.Id.Equals(sport.Id))
-                    .Append(sport))
+                    .Append(new ReportedSport(sport, DateTimeOffset.UtcNow)))
             };
         }
 

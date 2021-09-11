@@ -27,7 +27,7 @@ namespace Treinapp.Reports.Worker.Features.Reports
 
         public Guid Id { get; set; }
         public DateTimeOffset ForDay { get; set; }
-        public IEnumerable<Sport> CreatedSports { get; set; } = new HashSet<Sport>();
+        public IEnumerable<ReportedSport> CreatedSports { get; set; } = new HashSet<ReportedSport>();
         public IEnumerable<Workout> BookedWorkouts { get; set; } = new HashSet<Workout>();
         public IEnumerable<Workout> StartedWorkouts { get; set; } = new HashSet<Workout>();
         public IEnumerable<Workout> FinishedWorkouts { get; set; } = new HashSet<Workout>();

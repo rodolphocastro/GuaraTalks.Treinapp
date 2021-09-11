@@ -19,6 +19,7 @@ namespace Treinapp.Commons.Domain
             Workouts = new HashSet<Workout>(workouts) ?? new HashSet<Workout>();
         }
 
+        public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
         public IEnumerable<Workout> Workouts { get; private set; }
 
         public Sport BookWorkout(Workout workout)
