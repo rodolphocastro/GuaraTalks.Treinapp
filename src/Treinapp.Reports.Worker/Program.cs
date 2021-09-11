@@ -1,5 +1,3 @@
-using CloudNative.CloudEvents;
-using CloudNative.CloudEvents.SystemTextJson;
 
 using Confluent.Kafka;
 
@@ -30,7 +28,7 @@ namespace Treinapp.Reports.Worker
                 .CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    var configuration = hostContext.Configuration ?? throw new ArgumentException("Configurations weren't set for this worker, unable to continue");
+                    IConfiguration configuration = hostContext.Configuration ?? throw new ArgumentException("Configurations weren't set for this worker, unable to continue");
 
                     services
                         .AddHealthChecks()
@@ -46,13 +44,13 @@ namespace Treinapp.Reports.Worker
                     });
                     services.AddScoped(sp =>
                     {
-                        var mongoClient = sp.GetRequiredService<MongoClient>();
+                        MongoClient mongoClient = sp.GetRequiredService<MongoClient>();
                         return mongoClient.GetDatabase(Constants.MongoReportsDatabase);
                     });
 
                     services.AddScoped(c =>
                     {
-                        var config = new ConsumerConfig
+                        ConsumerConfig config = new ConsumerConfig
                         {
                             BootstrapServers = configuration.GetConnectionString(Constants.KafkaBootstrapKey),
                             GroupId = "reports-worker",

@@ -62,7 +62,7 @@ namespace Treinapp.API
         {
             services.AddSingleton(c =>
             {
-                var config = new ProducerConfig
+                ProducerConfig config = new ProducerConfig
                 {
                     BootstrapServers = Configuration.GetConnectionString(Constants.KafkaBootstrapKey),
                 };
@@ -84,7 +84,7 @@ namespace Treinapp.API
             });
             services.AddScoped(sp =>
             {
-                var mongoClient = sp.GetRequiredService<MongoClient>();
+                MongoClient mongoClient = sp.GetRequiredService<MongoClient>();
                 return mongoClient.GetDatabase(Constants.MongoCrudDatabase);
             });
         }

@@ -14,7 +14,7 @@ namespace Treinapp.Reports.API.Features.Reports
         [UseFiltering]
         public IExecutable<ReportPersistence> GetReport([Service] IMongoDatabase database)
         {
-            var collection = database.GetReportsCollection();
+            IMongoCollection<ReportPersistence> collection = database.GetReportsCollection();
             return collection.AsExecutable();
         }
     }

@@ -29,7 +29,7 @@ namespace Treinapp.Spammer
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    var configuration = hostContext.Configuration;
+                    IConfiguration configuration = hostContext.Configuration;
                     services
                         .AddHealthChecks()
                         .AddUrlGroup(new UriBuilder($"{configuration.GetConnectionString(Constants.TreinappApiKey)}/health").Uri);

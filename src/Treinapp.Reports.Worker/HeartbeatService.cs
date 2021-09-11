@@ -59,7 +59,7 @@ namespace Treinapp.Spammer
 
         private async Task ReactToIncomingChecks()
         {
-            var isHealthy = (lastReport?.Status ?? HealthStatus.Unhealthy) == HealthStatus.Healthy;
+            bool isHealthy = (lastReport?.Status ?? HealthStatus.Unhealthy) == HealthStatus.Healthy;
             if (!isHealthy)
             {
                 tcpListener.Stop();
@@ -70,7 +70,7 @@ namespace Treinapp.Spammer
             tcpListener.Start();
             while (tcpListener.Server.IsBound && tcpListener.Pending())
             {
-                var client = await tcpListener.AcceptTcpClientAsync();
+                TcpClient client = await tcpListener.AcceptTcpClientAsync();
                 client.Close();
                 logger.LogInformation("Successfully processed a health-check");
             }

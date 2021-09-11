@@ -41,12 +41,12 @@ namespace Treinapp.Reports.Worker
             {
                 try
                 {
-                    var result = KafkaConsumer.Consume(cancellationToken);
-                    var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
+                    ConsumeResult<string, byte[]> result = KafkaConsumer.Consume(cancellationToken);
+                    CloudNative.CloudEvents.CloudEvent cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
                     if (cloudEvent.Data is Workout bookedWorkout)
                     {
                         _logger.LogTrace("Attempting to update a report with the new booked workout");
-                        var report = await database
+                        Report report = await database
                             .GetReportsCollection()
                             .FetchAsync(DateTimeOffset.UtcNow, cancellationToken);
                         if (report is null)
@@ -60,7 +60,7 @@ namespace Treinapp.Reports.Worker
                             .GetReportsCollection()
                             .UpdateAsync(report, cancellationToken);
                     }
-                }                
+                }
                 // Consumer errors should generally be ignored (or logged) unless fatal.
                 catch (ConsumeException e) when (e.Error.IsFatal)
                 {

@@ -29,7 +29,7 @@ namespace Treinapp.API.Features.Workouts
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> ListAll([FromRoute] ListWorkouts query)
         {
-            var result = await sender.Send(query, Token);
+            IEnumerable<Workout> result = await sender.Send(query, Token);
             if (result is null)
             {
                 return NotFound();
@@ -42,7 +42,7 @@ namespace Treinapp.API.Features.Workouts
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> BookNew([FromBody] BookWorkout command)
         {
-            var result = await sender.Send(command, Token);
+            Workout result = await sender.Send(command, Token);
             if (result is null)
             {
                 return NotFound();
@@ -55,7 +55,7 @@ namespace Treinapp.API.Features.Workouts
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Begin([FromBody] StartWorkout command)
         {
-            var result = await sender.Send(command, Token);
+            Workout result = await sender.Send(command, Token);
             if (result is null)
             {
                 return NotFound();
@@ -68,7 +68,7 @@ namespace Treinapp.API.Features.Workouts
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Finish([FromBody] FinishWorkout command)
         {
-            var result = await sender.Send(command, Token);
+            Workout result = await sender.Send(command, Token);
             if (result is null)
             {
                 return NotFound();

@@ -33,7 +33,7 @@ namespace Treinapp.API.Features.Sports
         public async Task<IEnumerable<Sport>> Handle(ListSports request, CancellationToken cancellationToken)
         {
             logger.LogTrace("Listing all sports");
-            var result = await database
+            IEnumerable<Sport> result = await database
                 .GetSportsCollection()
                 .GetAllAsync(cancellationToken);
             return result;

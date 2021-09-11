@@ -53,7 +53,7 @@ namespace Treinapp.Reports.API
             });
             services.AddScoped(sp =>
             {
-                var mongoClient = sp.GetRequiredService<MongoClient>();
+                MongoClient mongoClient = sp.GetRequiredService<MongoClient>();
                 return mongoClient.GetDatabase(Constants.MongoReportsDatabase);
             });
         }

@@ -60,7 +60,7 @@ namespace Treinapp.Reports.Worker.Features.Reports
         /// <returns></returns>
         public static async Task<Report> InsertNewAsync(this IMongoCollection<ReportPersistence> collection, Report report, CancellationToken cancellationToken = default)
         {
-            var persistence = new ReportPersistence(report);
+            ReportPersistence persistence = new ReportPersistence(report);
             await collection.InsertOneAsync(persistence, null, cancellationToken);
             return persistence.ToReport();
         }
@@ -77,7 +77,7 @@ namespace Treinapp.Reports.Worker.Features.Reports
             DateTimeOffset forDay,
             CancellationToken cancellationToken = default)
         {
-            var mongoResult = await collection
+            ReportPersistence mongoResult = await collection
                 .Find(s => s.ForDay.Equals(forDay.Date))
                 .SingleOrDefaultAsync(cancellationToken);
             return mongoResult?.ToReport() ?? null;
@@ -95,7 +95,7 @@ namespace Treinapp.Reports.Worker.Features.Reports
             Report report,
             CancellationToken cancellationToken = default)
         {
-            var persistence = new ReportPersistence(report);
+            ReportPersistence persistence = new ReportPersistence(report);
             _ = await collection
                 .ReplaceOneAsync(s => s.Id.Equals(persistence.Id), persistence, new ReplaceOptions(), cancellationToken);
             return persistence.ToReport();

@@ -50,12 +50,14 @@ namespace Treinapp.Commons.Domain
 
         public Sport UpdateWorkout(Guid workoutId, Func<Workout, Workout> act)
         {
-            var existingWorkout = Workouts.SingleOrDefault(w => w.Id.Equals(workoutId));
+            Workout existingWorkout = Workouts.SingleOrDefault(w => w.Id.Equals(workoutId));
 
             if (existingWorkout == null)
+            {
                 return this;
+            }
 
-            var updatedWorkout = act(existingWorkout);
+            Workout updatedWorkout = act(existingWorkout);
             return this with
             {
                 Workouts = new HashSet<Workout>(

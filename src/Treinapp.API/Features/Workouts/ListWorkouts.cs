@@ -36,7 +36,7 @@ namespace Treinapp.API.Features.Workouts
         public async Task<IEnumerable<Workout>> Handle(ListWorkouts request, CancellationToken cancellationToken)
         {
             logger.LogTrace("Listing all workouts for a sport");
-            var sport = await database
+            Sport sport = await database
                 .GetSportsCollection()
                 .FetchAsync(request.SportId, cancellationToken);
             return sport?.Workouts ?? null;

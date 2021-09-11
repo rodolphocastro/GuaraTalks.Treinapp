@@ -13,7 +13,7 @@ namespace Treinapp.Reports.Portal.Data
 
         public Task<WeatherForecast[]> GetForecastAsync(DateTime startDate)
         {
-            var rng = new Random();
+            Random rng = new Random();
             return Task.FromResult(Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = startDate.AddDays(index),

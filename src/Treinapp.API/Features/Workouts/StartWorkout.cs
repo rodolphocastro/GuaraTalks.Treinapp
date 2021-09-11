@@ -51,7 +51,7 @@ namespace Treinapp.API.Features.Workouts
         public async Task<Workout> Handle(StartWorkout request, CancellationToken cancellationToken)
         {
             logger.LogTrace("Starting a workout");
-            var sport = await database
+            Sport sport = await database
                 .GetSportsCollection()
                 .FetchAsync(request.SportId, cancellationToken);
 
@@ -99,7 +99,7 @@ namespace Treinapp.API.Features.Workouts
             }
 
             logger.LogTrace("Publishing into Workout.Started topic");
-            var cloudEvent = new CloudEvent
+            CloudEvent cloudEvent = new CloudEvent
             {
                 Id = Guid.NewGuid().ToString(),
                 Type = Constants.CloudEvents.WorkoutStartedType,

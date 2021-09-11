@@ -29,7 +29,7 @@ namespace Treinapp.API.Features.Sports
         [ProducesResponseType(typeof(IEnumerable<Sport>), StatusCodes.Status200OK)]
         public async Task<IActionResult> ListAll()
         {
-            var result = await sender.Send(new ListSports(), Token);
+            IEnumerable<Sport> result = await sender.Send(new ListSports(), Token);
             return Ok(result);
         }
 
@@ -38,7 +38,7 @@ namespace Treinapp.API.Features.Sports
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateNew([FromBody] CreateSport command)
         {
-            var result = await sender.Send(command, Token);
+            Sport result = await sender.Send(command, Token);
             return CreatedAtAction(nameof(ListAll), result);
         }
     }
