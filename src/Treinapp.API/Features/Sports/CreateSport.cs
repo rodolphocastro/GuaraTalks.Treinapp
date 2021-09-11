@@ -87,7 +87,7 @@ namespace Treinapp.API.Features.Sports
             {
                 Id = Guid.NewGuid().ToString(),
                 Type = Constants.CloudEvents.SportCreatedType,
-                Source = new Uri(requestSource),
+                Source = new UriBuilder(requestSource).Uri,
                 Data = response
             };
 
