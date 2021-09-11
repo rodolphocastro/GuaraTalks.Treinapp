@@ -79,6 +79,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ConnectionStrings__TreinappApi=http://treinapp.api
+      - ConnectionStrings__TreinappReports=http://treinapp.reports.api
     ports:
       - "5010:80"
       - "5011:443"
@@ -104,6 +106,6 @@ services:
       context: .
       dockerfile: src/Treinapp.Spammer/Dockerfile
     environment:
-      - "ConnectionStrings__TreinappApi=http://treinapp.api"
+      - ConnectionStrings__TreinappApi=http://treinapp.api
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
