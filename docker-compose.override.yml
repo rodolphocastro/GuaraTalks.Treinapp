@@ -3,6 +3,7 @@ version: '3.4'
 services:
 # Infrastructure services
   mongo.db:
+    container_name: mongo-db
     image: mongo
     restart: always
     environment:
@@ -10,6 +11,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: imroot
 
   mongo.explorer:
+    container_name: mongo-gui
     image: mongo-express
     restart: always
     ports:
@@ -20,12 +22,14 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://root:imroot@mongo.db:27017/
 
   zookeeper:
+    container_name: zookeeper
     image: confluentinc/cp-zookeeper:latest    
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
   kafka:
+    container_name: kafka
     image: confluentinc/cp-kafka:latest    
     depends_on:
       - zookeeper
@@ -41,23 +45,14 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
 
   kafdrop:
+    container_name: kafka-gui
     image: obsidiandynamics/kafdrop:latest    
     depends_on:
       - kafka
     ports:
       - 19000:9000
     environment:
-      KAFKA_BROKERCONNECT: kafka:29092
-
-  redis:
-    image: redis
-
-  redis.commander:
-    image: rediscommander/redis-commander
-    environment:
-    - REDIS_HOSTS=local:redis:6379
-    ports:
-    - "8082:8081"
+      KAFKA_BROKERCONNECT: kafka:29092  
 
 # Our own services
   treinapp.api:
@@ -102,3 +97,13 @@ services:
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro  
+  
+  treinapp.spammer:  
+    image: ${DOCKER_REGISTRY-}treinappspammer
+    build:
+      context: .
+      dockerfile: src/Treinapp.Spammer/Dockerfile
+    environment:
+      - "ConnectionStrings__TreinappApi=http://treinapp.api"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro

@@ -26,4 +26,4 @@ services:
     build:
       context: .
       dockerfile: src/Treinapp.Reports.API/Dockerfile
-
+  

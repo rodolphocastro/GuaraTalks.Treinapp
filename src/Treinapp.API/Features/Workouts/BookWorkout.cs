@@ -99,7 +99,7 @@ namespace Treinapp.API.Features.Workouts
             {
                 Id = Guid.NewGuid().ToString(),
                 Type = Constants.CloudEvents.WorkoutBookedType,
-                Source = new Uri(requestSource),
+                Source = new UriBuilder(requestSource).Uri,
                 Data = response
             };
 
