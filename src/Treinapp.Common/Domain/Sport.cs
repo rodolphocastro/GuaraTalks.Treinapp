@@ -23,6 +23,11 @@ namespace Treinapp.Commons.Domain
 
         public Sport BookWorkout(Workout workout)
         {
+            if (workout is null)
+            {
+                return this;
+            }
+
             return this with
             {
                 Workouts = new HashSet<Workout>(Workouts) { workout }
@@ -31,6 +36,11 @@ namespace Treinapp.Commons.Domain
 
         public Sport UnbookWorkout(Workout workout)
         {
+            if (workout is null)
+            {
+                return this;
+            }
+
             return this with
             {
                 Workouts = new HashSet<Workout>(Workouts.Where(w => w.Equals(workout)))
