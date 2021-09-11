@@ -69,9 +69,12 @@ services:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
   
   treinapp.reports.worker:
+    ports:
+      - "7777:7777"
     environment:
       - ConnectionStrings__MongoDb=mongodb://root:imroot@mongo.db:27017/
       - ConnectionStrings__KafkaBootstrap=kafka:29092
+      - HeartbeatConfiguration__TcpPort=7777
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
 
@@ -79,6 +82,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ConnectionStrings__TreinappApi=http://treinapp.api
+      - ConnectionStrings__TreinappReports=http://treinapp.reports.api
     ports:
       - "5010:80"
       - "5011:443"
@@ -100,10 +105,13 @@ services:
   
   treinapp.spammer:  
     image: ${DOCKER_REGISTRY-}treinappspammer
+    ports:
+        - "6666:6666"
     build:
       context: .
       dockerfile: src/Treinapp.Spammer/Dockerfile
     environment:
-      - "ConnectionStrings__TreinappApi=http://treinapp.api"
+      - ConnectionStrings__TreinappApi=http://treinapp.api
+      - HeartbeatConfiguration__TcpPort=6666
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro

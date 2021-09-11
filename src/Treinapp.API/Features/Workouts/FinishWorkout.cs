@@ -51,7 +51,7 @@ namespace Treinapp.API.Features.Workouts
         public async Task<Workout> Handle(FinishWorkout request, CancellationToken cancellationToken)
         {
             logger.LogTrace("Finishing a workout");
-            var sport = await database
+            Sport sport = await database
                 .GetSportsCollection()
                 .FetchAsync(request.SportId, cancellationToken);
 
@@ -73,10 +73,10 @@ namespace Treinapp.API.Features.Workouts
     /// </summary>
     public class PublishWorkoutFinished : IRequestPostProcessor<FinishWorkout, Workout>
     {
-        private ILogger<PublishWorkoutFinished> logger;
-        private IProducer<string, byte[]> producer;
-        private CloudEventFormatter cloudEventFormatter;
-        private string requestSource;
+        private readonly ILogger<PublishWorkoutFinished> logger;
+        private readonly IProducer<string, byte[]> producer;
+        private readonly CloudEventFormatter cloudEventFormatter;
+        private readonly string requestSource;
 
         public PublishWorkoutFinished(
             ILogger<PublishWorkoutFinished> logger,
@@ -98,7 +98,7 @@ namespace Treinapp.API.Features.Workouts
             }
 
             logger.LogTrace("Publishing into Workout.Finished topic");
-            var cloudEvent = new CloudEvent
+            CloudEvent cloudEvent = new CloudEvent
             {
                 Id = Guid.NewGuid().ToString(),
                 Type = Constants.CloudEvents.WorkoutFinishedType,

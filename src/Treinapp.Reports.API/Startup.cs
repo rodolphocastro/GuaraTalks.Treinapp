@@ -26,6 +26,9 @@ namespace Treinapp.Reports.API
         public void ConfigureServices(IServiceCollection services)
         {
             AddMongoServices(services);
+            services
+                .AddHealthChecks()
+                .AddMongoDb(Configuration.GetConnectionString(Constants.MongoConnectionKey));
             services.Configure<ForwardedHeadersOptions>(fwh =>
             {
                 fwh.ForwardedHeaders = ForwardedHeaders.All;
@@ -50,7 +53,7 @@ namespace Treinapp.Reports.API
             });
             services.AddScoped(sp =>
             {
-                var mongoClient = sp.GetRequiredService<MongoClient>();
+                MongoClient mongoClient = sp.GetRequiredService<MongoClient>();
                 return mongoClient.GetDatabase(Constants.MongoReportsDatabase);
             });
         }
@@ -75,6 +78,7 @@ namespace Treinapp.Reports.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGraphQL();
+                endpoints.MapHealthChecks("/health");
             });
 
             app.UseGraphQLGraphiQL();

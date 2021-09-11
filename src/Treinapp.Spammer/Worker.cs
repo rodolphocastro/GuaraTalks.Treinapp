@@ -15,7 +15,7 @@ namespace Treinapp.Spammer
 {
     public class Worker : BackgroundService
     {
-        private Random rand = new();
+        private readonly Random rand = new();
         private readonly ILogger<Worker> _logger;
         private readonly ISender sender;
         private readonly Faker<CreateSportPayload> sportGenerator;
@@ -39,7 +39,7 @@ namespace Treinapp.Spammer
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                 try
                 {
-                    var randPick = rand.Next(0, 2);
+                    int randPick = rand.Next(0, 2);
                     switch (randPick)
                     {
                         case 0:

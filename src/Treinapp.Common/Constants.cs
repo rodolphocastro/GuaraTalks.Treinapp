@@ -30,6 +30,16 @@
         /// </summary>
         public const string KafkaBootstrapKey = @"KafkaBootstrap";
 
+        /// <summary>
+        /// Default key for the Treinapp API Connection String.
+        /// </summary>
+        public const string TreinappApiKey = @"TreinappApi";
+
+        /// <summary>
+        /// Default key for the Treinapp Reports API Connection String.
+        /// </summary>
+        public const string TreinappReportsKey = @"TreinappReports";
+
         public static class CloudEvents
         {
             /// <summary>

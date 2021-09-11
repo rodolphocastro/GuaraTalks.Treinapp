@@ -82,7 +82,7 @@ namespace Treinapp.API.Features.Sports
         /// <returns></returns>
         public static async Task<IEnumerable<Sport>> GetAllAsync(this IMongoCollection<SportPersistence> collection, CancellationToken cancellationToken = default)
         {
-            var mongoResults = await collection.Find(_ => true).ToListAsync(cancellationToken);
+            List<SportPersistence> mongoResults = await collection.Find(_ => true).ToListAsync(cancellationToken);
             return mongoResults.Select(r => r.ToSport());
         }
 
@@ -95,7 +95,7 @@ namespace Treinapp.API.Features.Sports
         /// <returns></returns>
         public static async Task<Sport> FetchAsync(this IMongoCollection<SportPersistence> collection, Guid sportId, CancellationToken cancellationToken = default)
         {
-            var mongoResult = await collection
+            SportPersistence mongoResult = await collection
                 .Find(s => s.Id.Equals(sportId))
                 .SingleOrDefaultAsync(cancellationToken);
             return mongoResult?.ToSport() ?? null;

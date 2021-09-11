@@ -1,14 +1,13 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
+using Treinapp.Common;
 using Treinapp.Reports.Portal.Data;
 
 namespace Treinapp.Reports.Portal
@@ -28,6 +27,13 @@ namespace Treinapp.Reports.Portal
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services
+                .AddHealthChecks()
+                .AddUrlGroup(new List<Uri>
+                {
+                    new UriBuilder($"{Configuration.GetConnectionString(Constants.TreinappApiKey)}/health").Uri,
+                    new UriBuilder($"{Configuration.GetConnectionString(Constants.TreinappReportsKey)}/health").Uri
+                });
             services.AddSingleton<WeatherForecastService>();
         }
 
@@ -54,6 +60,7 @@ namespace Treinapp.Reports.Portal
             {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
+                endpoints.MapHealthChecks("/health");
             });
         }
     }

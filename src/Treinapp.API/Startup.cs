@@ -33,6 +33,13 @@ namespace Treinapp.API
         {
             AddMongoServices(services);
             AddKafkaServices(services);
+            services
+                .AddHealthChecks()
+                .AddMongoDb(Configuration.GetConnectionString(Constants.MongoConnectionKey))
+                .AddKafka(new ProducerConfig
+                {
+                    BootstrapServers = Configuration.GetConnectionString(Constants.KafkaBootstrapKey),
+                });
             services.AddHttpContextAccessor();
             services.AddMediatR(GetType().Assembly);
             services.Configure<ForwardedHeadersOptions>(fwh =>
@@ -55,7 +62,7 @@ namespace Treinapp.API
         {
             services.AddSingleton(c =>
             {
-                var config = new ProducerConfig
+                ProducerConfig config = new ProducerConfig
                 {
                     BootstrapServers = Configuration.GetConnectionString(Constants.KafkaBootstrapKey),
                 };
@@ -77,7 +84,7 @@ namespace Treinapp.API
             });
             services.AddScoped(sp =>
             {
-                var mongoClient = sp.GetRequiredService<MongoClient>();
+                MongoClient mongoClient = sp.GetRequiredService<MongoClient>();
                 return mongoClient.GetDatabase(Constants.MongoCrudDatabase);
             });
         }
@@ -105,6 +112,7 @@ namespace Treinapp.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
         }
     }

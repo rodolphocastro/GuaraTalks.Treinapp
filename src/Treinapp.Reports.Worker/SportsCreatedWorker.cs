@@ -3,7 +3,6 @@ using CloudNative.CloudEvents.SystemTextJson;
 
 using Confluent.Kafka;
 
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using MongoDB.Driver;
@@ -43,12 +42,12 @@ namespace Treinapp.Reports.Worker
             {
                 try
                 {
-                    var result = KafkaConsumer.Consume(cancellationToken);
-                    var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
+                    ConsumeResult<string, byte[]> result = KafkaConsumer.Consume(cancellationToken);
+                    CloudNative.CloudEvents.CloudEvent cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
                     if (cloudEvent.Data is Sport createdSport)
                     {
                         _logger.LogTrace("Attempting to update a report with the new sport");
-                        var report = await database
+                        Report report = await database
                             .GetReportsCollection()
                             .FetchAsync(DateTimeOffset.UtcNow, cancellationToken);
                         if (report is null)
@@ -80,6 +79,6 @@ namespace Treinapp.Reports.Worker
 
             }
             KafkaConsumer.Unsubscribe();
-        }        
+        }
     }
 }

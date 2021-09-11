@@ -46,7 +46,7 @@ namespace Treinapp.Spammer.Features
             logger.LogTrace("Creating a new sport");
             try
             {
-                var result = await api.CreateNew(request.Payload, cancellationToken);
+                Sport result = await api.CreateNew(request.Payload, cancellationToken);
                 if (result is not null)
                 {
                     sports.Add(result);
@@ -54,7 +54,7 @@ namespace Treinapp.Spammer.Features
             }
             catch (Exception e)
             {
-                logger.LogError(e, "Error while hitting the API");                
+                logger.LogError(e, "Error while hitting the API");
             }
 
             return Unit.Value;

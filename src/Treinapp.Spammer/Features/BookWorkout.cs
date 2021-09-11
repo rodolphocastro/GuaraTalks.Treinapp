@@ -45,11 +45,11 @@ namespace Treinapp.Spammer.Features
         public async Task<Unit> Handle(BookWorkout request, CancellationToken cancellationToken)
         {
             logger.LogTrace("Booking a new Workout");
-            var sport = sports.SingleOrDefault(s => s.Id.Equals(request.Payload.SportId));
+            Sport sport = sports.SingleOrDefault(s => s.Id.Equals(request.Payload.SportId));
             try
             {
-                var workout = await api.BookNew(request.Payload, cancellationToken);
-                var updatedSport = sport.BookWorkout(workout);
+                Workout workout = await api.BookNew(request.Payload, cancellationToken);
+                Sport updatedSport = sport.BookWorkout(workout);
                 sports.Remove(sport);
                 sports.Add(sport);
             }
