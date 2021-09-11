@@ -58,7 +58,10 @@ namespace Treinapp.Reports.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            if (!Configuration.GetValue<bool>("DOTNET_RUNNING_IN_CONTAINER"))
+            {
+                app.UseHttpsRedirection();
+            }
 
             app.UseRouting();            
 

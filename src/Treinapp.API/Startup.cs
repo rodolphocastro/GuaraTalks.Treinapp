@@ -87,7 +87,10 @@ namespace Treinapp.API
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Treinapp.API v1"));
             }
 
-            app.UseHttpsRedirection();
+            if (!Configuration.GetValue<bool>("DOTNET_RUNNING_IN_CONTAINER"))
+            {
+                app.UseHttpsRedirection();
+            }
 
             app.UseRouting();
 
