@@ -7,6 +7,7 @@ using MediatR;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -34,6 +35,10 @@ namespace Treinapp.API
             AddKafkaServices(services);
             services.AddHttpContextAccessor();
             services.AddMediatR(GetType().Assembly);
+            services.Configure<ForwardedHeadersOptions>(fwh =>
+            {
+                fwh.ForwardedHeaders = ForwardedHeaders.All;
+            });
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -83,9 +88,10 @@ namespace Treinapp.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Treinapp.API v1"));
             }
+            app.UseForwardedHeaders();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Treinapp.API v1"));
 
             if (!Configuration.GetValue<bool>("DOTNET_RUNNING_IN_CONTAINER"))
             {
