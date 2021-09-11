@@ -33,7 +33,13 @@ namespace Treinapp.API
         {
             AddMongoServices(services);
             AddKafkaServices(services);
-            services.AddHealthChecks();
+            services
+                .AddHealthChecks()
+                .AddMongoDb(Configuration.GetConnectionString(Constants.MongoConnectionKey))
+                .AddKafka(new ProducerConfig
+                {
+                    BootstrapServers = Configuration.GetConnectionString(Constants.KafkaBootstrapKey),
+                });
             services.AddHttpContextAccessor();
             services.AddMediatR(GetType().Assembly);
             services.Configure<ForwardedHeadersOptions>(fwh =>
