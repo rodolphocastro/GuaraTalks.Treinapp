@@ -4,6 +4,7 @@ using MediatR;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 
 using Refit;
@@ -29,6 +30,9 @@ namespace Treinapp.Spammer
                 .ConfigureServices((hostContext, services) =>
                 {
                     var configuration = hostContext.Configuration;
+                    services
+                        .AddHealthChecks()
+                        .AddUrlGroup(new UriBuilder($"{configuration.GetConnectionString(Constants.TreinappApiKey)}/health").Uri);
                     services.AddSingleton<ICollection<Sport>>(new HashSet<Sport>());
                     services.AddSingleton<Faker<CreateSportPayload>, SportBogusGenerator>();
                     services.AddSingleton<Faker<BookWorkoutPayload>, BookWorkoutPayloadGenerator>();
@@ -37,6 +41,7 @@ namespace Treinapp.Spammer
                         .AddRefitClient<ITreinappApi>()
                         .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration.GetConnectionString(Constants.TreinappApiKey)));
                     services.AddHostedService<Worker>();
+                    services.AddSingleton<IHealthCheckPublisher, HeartbeatService>();
                 });
     }
 }
