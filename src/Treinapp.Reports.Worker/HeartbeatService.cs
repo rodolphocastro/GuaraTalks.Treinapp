@@ -51,13 +51,13 @@ namespace Treinapp.Spammer
             tcpListener.Start();
             while (!stoppingToken.IsCancellationRequested)
             {
-                await ReactToIncomingChecks(stoppingToken);
+                await ReactToIncomingChecks();
                 await Task.Delay(TimeSpan.FromSeconds(1), stoppingToken);
             }
             tcpListener.Start();
         }
 
-        private async Task ReactToIncomingChecks(CancellationToken stoppingToken)
+        private async Task ReactToIncomingChecks()
         {
             var isHealthy = (lastReport?.Status ?? HealthStatus.Unhealthy) == HealthStatus.Healthy;
             if (!isHealthy)
