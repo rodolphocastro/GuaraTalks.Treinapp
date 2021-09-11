@@ -103,8 +103,12 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro  
   
-  treinapp.spammer:
+  treinapp.spammer:  
+    image: ${DOCKER_REGISTRY-}treinappspammer
+    build:
+      context: .
+      dockerfile: src/Treinapp.Spammer/Dockerfile
     environment:
-      - "ConnectionStrings__TreinappApi=https://treinapp.api"
+      - "ConnectionStrings__TreinappApi=http://treinapp.api"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
