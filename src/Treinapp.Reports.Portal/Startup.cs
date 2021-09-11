@@ -28,6 +28,7 @@ namespace Treinapp.Reports.Portal
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddHealthChecks();
             services.AddSingleton<WeatherForecastService>();
         }
 
@@ -54,6 +55,7 @@ namespace Treinapp.Reports.Portal
             {
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
+                endpoints.MapHealthChecks("/health");
             });
         }
     }
