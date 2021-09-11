@@ -11,6 +11,7 @@ using Refit;
 using System;
 using System.Collections.Generic;
 
+using Treinapp.Common;
 using Treinapp.Commons.Domain;
 using Treinapp.Spammer.Features;
 
@@ -34,7 +35,7 @@ namespace Treinapp.Spammer
                     services.AddMediatR(typeof(Program).Assembly);
                     services
                         .AddRefitClient<ITreinappApi>()
-                        .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration.GetConnectionString("TreinappApi")));
+                        .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration.GetConnectionString(Constants.TreinappApiKey)));
                     services.AddHostedService<Worker>();
                 });
     }
