@@ -26,7 +26,9 @@ namespace Treinapp.Reports.API
         public void ConfigureServices(IServiceCollection services)
         {
             AddMongoServices(services);
-            services.AddHealthChecks();
+            services
+                .AddHealthChecks()
+                .AddMongoDb(Configuration.GetConnectionString(Constants.MongoConnectionKey));
             services.Configure<ForwardedHeadersOptions>(fwh =>
             {
                 fwh.ForwardedHeaders = ForwardedHeaders.All;

@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="5.0.1" />
     <PackageReference Include="GraphQL.Server.Ui.GraphiQL" Version="5.0.2" />
     <PackageReference Include="HotChocolate.AspNetCore" Version="11.3.7" />
     <PackageReference Include="HotChocolate.Data.MongoDb" Version="11.3.7" />
