@@ -102,10 +102,13 @@ services:
   
   treinapp.spammer:  
     image: ${DOCKER_REGISTRY-}treinappspammer
+    ports:
+        - "6666:6666"
     build:
       context: .
       dockerfile: src/Treinapp.Spammer/Dockerfile
     environment:
       - ConnectionStrings__TreinappApi=http://treinapp.api
+      - HeartbeatConfiguration__TcpPort=6666
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro

@@ -41,7 +41,10 @@ namespace Treinapp.Spammer
                         .AddRefitClient<ITreinappApi>()
                         .ConfigureHttpClient(c => c.BaseAddress = new Uri(configuration.GetConnectionString(Constants.TreinappApiKey)));
                     services.AddHostedService<Worker>();
-                    services.AddSingleton<IHealthCheckPublisher, HeartbeatService>();
+                    services.Configure<HeartbeatConfiguration>(configuration.GetSection(nameof(HeartbeatConfiguration)));
+                    services.AddSingleton<HeartbeatService>();
+                    services.AddSingleton<IHealthCheckPublisher>(sp => sp.GetRequiredService<HeartbeatService>());
+                    services.AddHostedService(sp => sp.GetRequiredService<HeartbeatService>());
                 });
     }
 }
