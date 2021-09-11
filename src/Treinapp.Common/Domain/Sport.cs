@@ -19,10 +19,16 @@ namespace Treinapp.Commons.Domain
             Workouts = new HashSet<Workout>(workouts) ?? new HashSet<Workout>();
         }
 
+        public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
         public IEnumerable<Workout> Workouts { get; private set; }
 
         public Sport BookWorkout(Workout workout)
         {
+            if (workout is null)
+            {
+                return this;
+            }
+
             return this with
             {
                 Workouts = new HashSet<Workout>(Workouts) { workout }
@@ -31,6 +37,11 @@ namespace Treinapp.Commons.Domain
 
         public Sport UnbookWorkout(Workout workout)
         {
+            if (workout is null)
+            {
+                return this;
+            }
+
             return this with
             {
                 Workouts = new HashSet<Workout>(Workouts.Where(w => w.Equals(workout)))

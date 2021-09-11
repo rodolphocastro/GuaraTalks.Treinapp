@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Treinapp.Common;
+using Treinapp.Common.Domain;
 using Treinapp.Commons.Domain;
 using Treinapp.Reports.Worker.Features.Reports;
 
