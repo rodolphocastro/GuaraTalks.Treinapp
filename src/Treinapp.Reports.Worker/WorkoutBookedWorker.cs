@@ -42,7 +42,7 @@ namespace Treinapp.Reports.Worker
                 try
                 {
                     ConsumeResult<string, byte[]> result = KafkaConsumer.Consume(cancellationToken);
-                    CloudNative.CloudEvents.CloudEvent cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
+                    var cloudEvent = result.Message.ToCloudEvent(cloudEventFormatter);
                     if (cloudEvent.Data is Workout bookedWorkout)
                     {
                         _logger.LogTrace("Attempting to update a report with the new booked workout");

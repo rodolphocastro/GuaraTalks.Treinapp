@@ -99,7 +99,7 @@ namespace Treinapp.API.Features.Workouts
             }
 
             logger.LogTrace("Publishing into Workout.Started topic");
-            CloudEvent cloudEvent = new CloudEvent
+            var cloudEvent = new CloudEvent
             {
                 Id = Guid.NewGuid().ToString(),
                 Type = Constants.CloudEvents.WorkoutStartedType,

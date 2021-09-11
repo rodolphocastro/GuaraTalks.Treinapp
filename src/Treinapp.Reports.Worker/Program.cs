@@ -50,7 +50,7 @@ namespace Treinapp.Reports.Worker
 
                     services.AddScoped(c =>
                     {
-                        ConsumerConfig config = new ConsumerConfig
+                        var config = new ConsumerConfig
                         {
                             BootstrapServers = configuration.GetConnectionString(Constants.KafkaBootstrapKey),
                             GroupId = "reports-worker",

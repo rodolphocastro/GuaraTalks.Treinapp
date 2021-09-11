@@ -50,7 +50,7 @@ namespace Treinapp.API.Features.Sports
         public async Task<Sport> Handle(CreateSport request, CancellationToken cancellationToken)
         {
             logger.LogTrace("Creating a new sport");
-            SportPersistence sportPoco = new SportPersistence
+            var sportPoco = new SportPersistence
             {
                 Description = request.Description,
                 Name = request.Name
@@ -83,7 +83,7 @@ namespace Treinapp.API.Features.Sports
         public async Task Process(CreateSport request, Sport response, CancellationToken cancellationToken)
         {
             logger.LogTrace("Publishing into Sport.Created topic");
-            CloudEvent cloudEvent = new CloudEvent()
+            var cloudEvent = new CloudEvent()
             {
                 Id = Guid.NewGuid().ToString(),
                 Type = Constants.CloudEvents.SportCreatedType,
