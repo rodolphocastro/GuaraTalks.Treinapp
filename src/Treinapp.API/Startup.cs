@@ -33,6 +33,7 @@ namespace Treinapp.API
         {
             AddMongoServices(services);
             AddKafkaServices(services);
+            services.AddHealthChecks();
             services.AddHttpContextAccessor();
             services.AddMediatR(GetType().Assembly);
             services.Configure<ForwardedHeadersOptions>(fwh =>
@@ -105,6 +106,7 @@ namespace Treinapp.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health");
             });
         }
     }
