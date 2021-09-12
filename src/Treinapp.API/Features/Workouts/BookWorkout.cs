@@ -49,7 +49,7 @@ namespace Treinapp.API.Features.Workouts
         public async Task<Workout> Handle(BookWorkout request, CancellationToken cancellationToken)
         {
             logger.LogTrace("Booking a new Workout");
-            Workout workout = new Workout(Guid.NewGuid(), request.BookAt);
+            var workout = new Workout(Guid.NewGuid(), request.BookAt);
             Sport sport = await database
                 .GetSportsCollection()
                 .FetchAsync(request.SportId, cancellationToken);
@@ -95,7 +95,7 @@ namespace Treinapp.API.Features.Workouts
             }
 
             logger.LogTrace("Publishing into Workout.Booked topic");
-            CloudEvent cloudEvent = new CloudEvent
+            var cloudEvent = new CloudEvent
             {
                 Id = Guid.NewGuid().ToString(),
                 Type = Constants.CloudEvents.WorkoutBookedType,

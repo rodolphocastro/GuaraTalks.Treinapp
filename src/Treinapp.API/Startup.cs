@@ -62,7 +62,7 @@ namespace Treinapp.API
         {
             services.AddSingleton(c =>
             {
-                ProducerConfig config = new ProducerConfig
+                var config = new ProducerConfig
                 {
                     BootstrapServers = Configuration.GetConnectionString(Constants.KafkaBootstrapKey),
                 };

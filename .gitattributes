@@ -1,0 +1,8 @@
+* text=auto
+
+*.cs        text eol=crlf
+
+# Shell files should always use LF
+*.sh        text eol=lf
+.bashrc     text eol=lf
+*.ps1       text eol=crlf

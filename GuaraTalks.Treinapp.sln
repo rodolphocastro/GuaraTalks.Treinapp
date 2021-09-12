@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31612.314
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4EBB9FE4-BD5F-4A14-8A0F-EE101190E95E}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		README.md = README.md
 	EndProjectSection
@@ -30,7 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub", "GitHub", "{0CD7E9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Treinapp.Common", "src\Treinapp.Common\Treinapp.Common.csproj", "{7DCEC5C1-B415-4030-A61D-4739C02507A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treinapp.Spammer", "src\Treinapp.Spammer\Treinapp.Spammer.csproj", "{744DB311-11A5-4C86-A6FF-B23C640D5DA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Treinapp.Spammer", "src\Treinapp.Spammer\Treinapp.Spammer.csproj", "{744DB311-11A5-4C86-A6FF-B23C640D5DA9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
