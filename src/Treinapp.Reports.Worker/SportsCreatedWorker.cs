@@ -21,17 +21,14 @@ using Treinapp.Reports.Worker.Features.Reports;
 namespace Treinapp.Reports.Worker
 {
     public class SportsCreatedWorker : KafkaConsumerWorker
-    {
-        private readonly IMongoDatabase database;
+    {        
         private readonly ISender sender;
 
         public SportsCreatedWorker(
-            ILogger<SportsCreatedWorker> logger,
-            IMongoDatabase database,
+            ILogger<SportsCreatedWorker> logger,            
             IServiceProvider serviceProvider,
             ISender sender) : base(logger, serviceProvider, new JsonEventFormatter<Sport>())
-        {
-            this.database = database ?? throw new ArgumentNullException(nameof(database));
+        {            
             this.sender = sender ?? throw new ArgumentNullException(nameof(sender));
         }
 
@@ -52,9 +49,7 @@ namespace Treinapp.Reports.Worker
                     if (cloudEvent.Data is Sport createdSport)
                     {
                         _logger.LogTrace("Attempting to update a report with the new sport");
-                        Report report = await database
-                            .GetReportsCollection()
-                            .FetchAsync(DateTimeOffset.UtcNow, cancellationToken);
+                        Report report = await sender.Send(new GetReportForDay(), cancellationToken);
                         if (report is null)
                         {
                             report = await sender.Send(new CreateReport(), cancellationToken);

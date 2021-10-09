@@ -1,7 +1,9 @@
-﻿using CloudNative.CloudEvents.Kafka;
+using CloudNative.CloudEvents.Kafka;
 using CloudNative.CloudEvents.SystemTextJson;
 
 using Confluent.Kafka;
+
+using MediatR;
 
 using Microsoft.Extensions.Logging;
 
@@ -21,12 +23,15 @@ namespace Treinapp.Reports.Worker
     public class WorkoutBookedWorker : KafkaConsumerWorker
     {
         private readonly IMongoDatabase database;
+        private readonly ISender sender;
 
         public WorkoutBookedWorker(ILogger<WorkoutBookedWorker> logger,
             IServiceProvider serviceProvider,
-            IMongoDatabase database) : base(logger, serviceProvider, new JsonEventFormatter<Workout>())
+            IMongoDatabase database,
+            ISender sender) : base(logger, serviceProvider, new JsonEventFormatter<Workout>())
         {
             this.database = database ?? throw new ArgumentNullException(nameof(database));
+            this.sender = sender ?? throw new ArgumentNullException(nameof(sender));
         }
 
         protected override async Task DoScoped(CancellationToken cancellationToken)
@@ -46,14 +51,10 @@ namespace Treinapp.Reports.Worker
                     if (cloudEvent.Data is Workout bookedWorkout)
                     {
                         _logger.LogTrace("Attempting to update a report with the new booked workout");
-                        Report report = await database
-                            .GetReportsCollection()
-                            .FetchAsync(DateTimeOffset.UtcNow, cancellationToken);
+                        Report report = await sender.Send(new GetReportForDay(), cancellationToken);
                         if (report is null)
                         {
-                            report = await database
-                                .GetReportsCollection()
-                                .InsertNewAsync(new Report(Guid.NewGuid()), cancellationToken);
+                            report = await sender.Send(new CreateReport(), cancellationToken);
                         }
                         report = report.WithBookedWorkout(bookedWorkout);
                         await database
