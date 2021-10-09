@@ -3,6 +3,8 @@ using CloudNative.CloudEvents.SystemTextJson;
 
 using Confluent.Kafka;
 
+using MediatR;
+
 using Microsoft.Extensions.Logging;
 
 using MongoDB.Driver;
@@ -21,13 +23,16 @@ namespace Treinapp.Reports.Worker
     public class SportsCreatedWorker : KafkaConsumerWorker
     {
         private readonly IMongoDatabase database;
+        private readonly ISender sender;
 
         public SportsCreatedWorker(
             ILogger<SportsCreatedWorker> logger,
             IMongoDatabase database,
-            IServiceProvider serviceProvider) : base(logger, serviceProvider, new JsonEventFormatter<Sport>())
+            IServiceProvider serviceProvider,
+            ISender sender) : base(logger, serviceProvider, new JsonEventFormatter<Sport>())
         {
             this.database = database ?? throw new ArgumentNullException(nameof(database));
+            this.sender = sender ?? throw new ArgumentNullException(nameof(sender));
         }
 
         protected override async Task DoScoped(CancellationToken cancellationToken)
@@ -52,9 +57,7 @@ namespace Treinapp.Reports.Worker
                             .FetchAsync(DateTimeOffset.UtcNow, cancellationToken);
                         if (report is null)
                         {
-                            report = await database
-                                .GetReportsCollection()
-                                .InsertNewAsync(new Report(Guid.NewGuid()), cancellationToken);
+                            report = await sender.Send(new CreateReport(), cancellationToken);
                         }
                         report = report.WithCreatedSport(createdSport);
                         await database
