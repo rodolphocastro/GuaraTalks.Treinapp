@@ -13,6 +13,8 @@
     <PackageReference Include="CloudNative.CloudEvents.Kafka" Version="2.1.1" />
     <PackageReference Include="CloudNative.CloudEvents.SystemTextJson" Version="2.1.1" />
     <PackageReference Include="Confluent.Kafka" Version="1.7.0" />
+    <PackageReference Include="MediatR" Version="9.0.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.13.1" />
