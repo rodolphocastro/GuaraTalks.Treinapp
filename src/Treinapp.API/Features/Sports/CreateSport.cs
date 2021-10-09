@@ -1,4 +1,4 @@
-﻿using CloudNative.CloudEvents;
+using CloudNative.CloudEvents;
 using CloudNative.CloudEvents.Kafka;
 
 using Confluent.Kafka;
@@ -80,9 +80,13 @@ namespace Treinapp.API.Features.Sports
             requestSource = context?.HttpContext?.Request.Host.Value ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task Process(CreateSport request, Sport response, CancellationToken cancellationToken)
+        public Task Process(CreateSport request, Sport response, CancellationToken cancellationToken)
         {
-            logger.LogTrace("Publishing into Sport.Created topic");
+            if (response is null)
+            {
+                return Task.CompletedTask;
+            }
+
             var cloudEvent = new CloudEvent()
             {
                 Id = Guid.NewGuid().ToString(),
@@ -91,10 +95,29 @@ namespace Treinapp.API.Features.Sports
                 Data = response
             };
 
-            await producer.ProduceAsync(
-                Constants.CloudEvents.SportCreatedTopic,
-                cloudEvent.ToKafkaMessage(ContentMode.Structured, cloudEventFormatter),
-                cancellationToken);
+            // Allow the publishing routine to run on its own Task
+            Task.Run(() => PublishToKafka(cloudEvent, cancellationToken), cancellationToken);
+
+            return Task.CompletedTask;
+        }
+
+        private async Task<DeliveryResult<string, byte[]>> PublishToKafka(CloudEvent cloudEvent, CancellationToken cancellationToken)
+        {
+            logger.LogTrace("Publishing a new CloudEvent {cloudEventType}", cloudEvent.Type);
+            try
+            {
+                var result = await producer.ProduceAsync(
+                                Constants.CloudEvents.SportCreatedTopic,
+                                cloudEvent.ToKafkaMessage(ContentMode.Structured, cloudEventFormatter),
+                                cancellationToken);
+                logger.LogTrace("CloudEvent published successfully");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error happened while publishing a CloudEvent to Kafka");
+                throw;
+            }
         }
     }
 }
