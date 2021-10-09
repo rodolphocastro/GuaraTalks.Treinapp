@@ -1,6 +1,8 @@
 
 using Confluent.Kafka;
 
+using MediatR;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -11,6 +13,7 @@ using MongoDB.Driver;
 using System;
 
 using Treinapp.Common;
+using Treinapp.Reports.Worker.Features.Reports;
 using Treinapp.Spammer;
 
 namespace Treinapp.Reports.Worker
@@ -42,11 +45,14 @@ namespace Treinapp.Reports.Worker
                     {
                         return new MongoClient(configuration.GetConnectionString(Constants.MongoConnectionKey));
                     });
+
                     services.AddScoped(sp =>
                     {
                         MongoClient mongoClient = sp.GetRequiredService<MongoClient>();
                         return mongoClient.GetDatabase(Constants.MongoReportsDatabase);
                     });
+
+                    services.AddMediatR(typeof(CreateReportHandler));
 
                     services.AddScoped(c =>
                     {
