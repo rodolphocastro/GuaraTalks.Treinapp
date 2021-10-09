@@ -1,5 +1,4 @@
 using CloudNative.CloudEvents;
-using CloudNative.CloudEvents.Kafka;
 
 using Confluent.Kafka;
 
@@ -16,6 +15,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Treinapp.API.Eventing;
 using Treinapp.Common;
 using Treinapp.Commons.Domain;
 
@@ -65,18 +65,13 @@ namespace Treinapp.API.Features.Sports
     /// <summary>
     /// Handler for publishing that a Sport was created.
     /// </summary>
-    public class PublishSportCreated : IRequestPostProcessor<CreateSport, Sport>
+    public class PublishSportCreated : KafkaPublisherBase, IRequestPostProcessor<CreateSport, Sport>
     {
-        private readonly ILogger<PublishSportCreated> logger;
-        private readonly IProducer<string, byte[]> producer;
-        private readonly CloudEventFormatter cloudEventFormatter;
         private readonly string requestSource;
 
         public PublishSportCreated(ILogger<PublishSportCreated> logger, IProducer<string, byte[]> producer, CloudEventFormatter cloudEventFormatter, IHttpContextAccessor context)
+            : base(logger, producer, cloudEventFormatter, Constants.CloudEvents.SportCreatedTopic)
         {
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.producer = producer ?? throw new ArgumentNullException(nameof(producer));
-            this.cloudEventFormatter = cloudEventFormatter ?? throw new ArgumentNullException(nameof(cloudEventFormatter));
             requestSource = context?.HttpContext?.Request.Host.Value ?? throw new ArgumentNullException(nameof(context));
         }
 
@@ -99,25 +94,6 @@ namespace Treinapp.API.Features.Sports
             Task.Run(() => PublishToKafka(cloudEvent, cancellationToken), cancellationToken);
 
             return Task.CompletedTask;
-        }
-
-        private async Task<DeliveryResult<string, byte[]>> PublishToKafka(CloudEvent cloudEvent, CancellationToken cancellationToken)
-        {
-            logger.LogTrace("Publishing a new CloudEvent {cloudEventType}", cloudEvent.Type);
-            try
-            {
-                var result = await producer.ProduceAsync(
-                                Constants.CloudEvents.SportCreatedTopic,
-                                cloudEvent.ToKafkaMessage(ContentMode.Structured, cloudEventFormatter),
-                                cancellationToken);
-                logger.LogTrace("CloudEvent published successfully");
-                return result;
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "An error happened while publishing a CloudEvent to Kafka");
-                throw;
-            }
         }
     }
 }

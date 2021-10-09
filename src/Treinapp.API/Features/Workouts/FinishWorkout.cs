@@ -1,5 +1,4 @@
-﻿using CloudNative.CloudEvents;
-using CloudNative.CloudEvents.Kafka;
+using CloudNative.CloudEvents;
 
 using Confluent.Kafka;
 
@@ -17,6 +16,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Treinapp.API.Eventing;
 using Treinapp.API.Features.Sports;
 using Treinapp.Common;
 using Treinapp.Commons.Domain;
@@ -71,33 +71,26 @@ namespace Treinapp.API.Features.Workouts
     /// <summary>
     /// Handler for publishing that a Workout was finished.
     /// </summary>
-    public class PublishWorkoutFinished : IRequestPostProcessor<FinishWorkout, Workout>
+    public class PublishWorkoutFinished : KafkaPublisherBase, IRequestPostProcessor<FinishWorkout, Workout>
     {
-        private readonly ILogger<PublishWorkoutFinished> logger;
-        private readonly IProducer<string, byte[]> producer;
-        private readonly CloudEventFormatter cloudEventFormatter;
         private readonly string requestSource;
 
         public PublishWorkoutFinished(
             ILogger<PublishWorkoutFinished> logger,
             IProducer<string, byte[]> producer,
             CloudEventFormatter cloudEventFormatter,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor) : base(logger, producer, cloudEventFormatter, Constants.CloudEvents.WorkoutFinishedTopic)
         {
-            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            this.producer = producer ?? throw new ArgumentNullException(nameof(producer));
-            this.cloudEventFormatter = cloudEventFormatter ?? throw new ArgumentNullException(nameof(cloudEventFormatter));
             requestSource = httpContextAccessor?.HttpContext?.Request.Host.Value ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
 
-        public async Task Process(FinishWorkout request, Workout response, CancellationToken cancellationToken)
+        public Task Process(FinishWorkout request, Workout response, CancellationToken cancellationToken)
         {
             if (response is null)
             {
-                return;
+                return Task.CompletedTask;
             }
 
-            logger.LogTrace("Publishing into Workout.Finished topic");
             var cloudEvent = new CloudEvent
             {
                 Id = Guid.NewGuid().ToString(),
@@ -106,11 +99,9 @@ namespace Treinapp.API.Features.Workouts
                 Data = response
             };
 
-            await producer.ProduceAsync
-                (
-                Constants.CloudEvents.WorkoutFinishedTopic,
-                cloudEvent.ToKafkaMessage(ContentMode.Structured, cloudEventFormatter),
-                cancellationToken);
+            Task.Run(() => PublishToKafka(cloudEvent, cancellationToken), cancellationToken);
+
+            return Task.CompletedTask;
         }
     }
 }
