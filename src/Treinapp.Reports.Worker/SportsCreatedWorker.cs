@@ -7,8 +7,6 @@ using MediatR;
 
 using Microsoft.Extensions.Logging;
 
-using MongoDB.Driver;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,14 +19,14 @@ using Treinapp.Reports.Worker.Features.Reports;
 namespace Treinapp.Reports.Worker
 {
     public class SportsCreatedWorker : KafkaConsumerWorker
-    {        
+    {
         private readonly ISender sender;
 
         public SportsCreatedWorker(
-            ILogger<SportsCreatedWorker> logger,            
+            ILogger<SportsCreatedWorker> logger,
             IServiceProvider serviceProvider,
             ISender sender) : base(logger, serviceProvider, new JsonEventFormatter<Sport>())
-        {            
+        {
             this.sender = sender ?? throw new ArgumentNullException(nameof(sender));
         }
 
@@ -49,11 +47,9 @@ namespace Treinapp.Reports.Worker
                     if (cloudEvent.Data is Sport createdSport)
                     {
                         _logger.LogTrace("Attempting to update a report with the new sport");
-                        Report report = await sender.Send(new GetReportForDay(), cancellationToken);
-                        if (report is null)
-                        {
-                            report = await sender.Send(new CreateReport(), cancellationToken);
-                        }
+                        Report report =
+                            await sender.Send(new GetReportForDay(), cancellationToken)     // Either fetch the current report, or...
+                            ?? await sender.Send(new CreateReport(), cancellationToken);    // Create a new one if none exists for today
 
                         _ = await sender.Send(new AppendCreatedSport
                         {

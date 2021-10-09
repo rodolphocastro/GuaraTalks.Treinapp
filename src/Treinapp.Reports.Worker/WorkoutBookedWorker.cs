@@ -46,11 +46,9 @@ namespace Treinapp.Reports.Worker
                     if (cloudEvent.Data is Workout bookedWorkout)
                     {
                         _logger.LogTrace("Attempting to update a report with the new booked workout");
-                        Report report = await sender.Send(new GetReportForDay(), cancellationToken);
-                        if (report is null)
-                        {
-                            report = await sender.Send(new CreateReport(), cancellationToken);
-                        }
+                        Report report =
+                            await sender.Send(new GetReportForDay(), cancellationToken)     // Either fetch the current report, or...
+                            ?? await sender.Send(new CreateReport(), cancellationToken);    // Create a new one if none exists for today
 
                         _ = await sender.Send(new AppendBookedWorkout
                         {
