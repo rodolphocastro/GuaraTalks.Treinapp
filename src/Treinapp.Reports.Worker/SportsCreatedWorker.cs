@@ -59,10 +59,12 @@ namespace Treinapp.Reports.Worker
                         {
                             report = await sender.Send(new CreateReport(), cancellationToken);
                         }
-                        report = report.WithCreatedSport(createdSport);
-                        await database
-                            .GetReportsCollection()
-                            .UpdateAsync(report, cancellationToken);
+
+                        _ = await sender.Send(new AppendCreatedSport
+                        {
+                            AppendTo = report,
+                            Append = createdSport
+                        }, cancellationToken);
                     }
                 }
                 // Consumer errors should generally be ignored (or logged) unless fatal.
