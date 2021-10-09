@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,8 +18,6 @@ namespace Treinapp.API.Features.Sports
     {
         private readonly ISender sender;
 
-        private CancellationToken Token => HttpContext?.RequestAborted ?? default;
-
         public SportsController(ISender sender)
         {
             this.sender = sender ?? throw new System.ArgumentNullException(nameof(sender));
@@ -27,18 +25,18 @@ namespace Treinapp.API.Features.Sports
 
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<Sport>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> ListAll()
+        public async Task<IActionResult> ListAll(CancellationToken cancellationToken)
         {
-            IEnumerable<Sport> result = await sender.Send(new ListSports(), Token);
+            IEnumerable<Sport> result = await sender.Send(new ListSports(), cancellationToken);
             return Ok(result);
         }
 
         [HttpPost]
         [ProducesResponseType(typeof(Sport), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateNew([FromBody] CreateSport command)
+        public async Task<IActionResult> CreateNew([FromBody] CreateSport command, CancellationToken cancellationToken)
         {
-            Sport result = await sender.Send(command, Token);
+            Sport result = await sender.Send(command, cancellationToken);
             return CreatedAtAction(nameof(ListAll), result);
         }
     }

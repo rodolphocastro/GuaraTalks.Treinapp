@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +17,6 @@ namespace Treinapp.API.Features.Workouts
     public class WorkoutsController : ControllerBase
     {
         private readonly ISender sender;
-        private CancellationToken Token => HttpContext?.RequestAborted ?? default;
 
         public WorkoutsController(ISender sender)
         {
@@ -27,9 +26,9 @@ namespace Treinapp.API.Features.Workouts
         [HttpGet("{SportId}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Workout>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> ListAll([FromRoute] ListWorkouts query)
+        public async Task<IActionResult> ListAll([FromRoute] ListWorkouts query, CancellationToken cancellationToken)
         {
-            IEnumerable<Workout> result = await sender.Send(query, Token);
+            IEnumerable<Workout> result = await sender.Send(query, cancellationToken);
             if (result is null)
             {
                 return NotFound();
@@ -40,9 +39,9 @@ namespace Treinapp.API.Features.Workouts
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Workout))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> BookNew([FromBody] BookWorkout command)
+        public async Task<IActionResult> BookNew([FromBody] BookWorkout command, CancellationToken cancellationToken)
         {
-            Workout result = await sender.Send(command, Token);
+            Workout result = await sender.Send(command, cancellationToken);
             if (result is null)
             {
                 return NotFound();
@@ -53,9 +52,9 @@ namespace Treinapp.API.Features.Workouts
         [HttpPut("begin")]
         [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(Workout))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Begin([FromBody] StartWorkout command)
+        public async Task<IActionResult> Begin([FromBody] StartWorkout command, CancellationToken cancellationToken)
         {
-            Workout result = await sender.Send(command, Token);
+            Workout result = await sender.Send(command, cancellationToken);
             if (result is null)
             {
                 return NotFound();
@@ -66,9 +65,9 @@ namespace Treinapp.API.Features.Workouts
         [HttpPut("finish")]
         [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(Workout))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Finish([FromBody] FinishWorkout command)
+        public async Task<IActionResult> Finish([FromBody] FinishWorkout command, CancellationToken cancellationToken)
         {
-            Workout result = await sender.Send(command, Token);
+            Workout result = await sender.Send(command, cancellationToken);
             if (result is null)
             {
                 return NotFound();
