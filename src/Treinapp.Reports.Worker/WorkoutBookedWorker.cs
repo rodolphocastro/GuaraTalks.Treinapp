@@ -7,8 +7,6 @@ using MediatR;
 
 using Microsoft.Extensions.Logging;
 
-using MongoDB.Driver;
-
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,15 +20,12 @@ namespace Treinapp.Reports.Worker
 {
     public class WorkoutBookedWorker : KafkaConsumerWorker
     {
-        private readonly IMongoDatabase database;
         private readonly ISender sender;
 
         public WorkoutBookedWorker(ILogger<WorkoutBookedWorker> logger,
             IServiceProvider serviceProvider,
-            IMongoDatabase database,
             ISender sender) : base(logger, serviceProvider, new JsonEventFormatter<Workout>())
         {
-            this.database = database ?? throw new ArgumentNullException(nameof(database));
             this.sender = sender ?? throw new ArgumentNullException(nameof(sender));
         }
 
@@ -56,10 +51,12 @@ namespace Treinapp.Reports.Worker
                         {
                             report = await sender.Send(new CreateReport(), cancellationToken);
                         }
-                        report = report.WithBookedWorkout(bookedWorkout);
-                        await database
-                            .GetReportsCollection()
-                            .UpdateAsync(report, cancellationToken);
+
+                        _ = await sender.Send(new AppendBookedWorkout
+                        {
+                            Append = bookedWorkout,
+                            AppendTo = report
+                        }, cancellationToken);
                     }
                 }
                 // Consumer errors should generally be ignored (or logged) unless fatal.
