@@ -29,11 +29,7 @@ namespace Treinapp.API.Features.Workouts
         public async Task<IActionResult> ListAll([FromRoute] ListWorkouts query, CancellationToken cancellationToken)
         {
             IEnumerable<Workout> result = await sender.Send(query, cancellationToken);
-            if (result is null)
-            {
-                return NotFound();
-            }
-            return Ok(result);
+            return result is null ? NotFound() : Ok(result);
         }
 
         [HttpPost]
@@ -42,11 +38,7 @@ namespace Treinapp.API.Features.Workouts
         public async Task<IActionResult> BookNew([FromBody] BookWorkout command, CancellationToken cancellationToken)
         {
             Workout result = await sender.Send(command, cancellationToken);
-            if (result is null)
-            {
-                return NotFound();
-            }
-            return Created("", result);
+            return result is null ? NotFound() : Created("", result);
         }
 
         [HttpPut("begin")]
@@ -55,11 +47,7 @@ namespace Treinapp.API.Features.Workouts
         public async Task<IActionResult> Begin([FromBody] StartWorkout command, CancellationToken cancellationToken)
         {
             Workout result = await sender.Send(command, cancellationToken);
-            if (result is null)
-            {
-                return NotFound();
-            }
-            return Accepted(result);
+            return result is null ? NotFound() : Accepted(result);
         }
 
         [HttpPut("finish")]
@@ -68,11 +56,7 @@ namespace Treinapp.API.Features.Workouts
         public async Task<IActionResult> Finish([FromBody] FinishWorkout command, CancellationToken cancellationToken)
         {
             Workout result = await sender.Send(command, cancellationToken);
-            if (result is null)
-            {
-                return NotFound();
-            }
-            return Accepted(result);
+            return result is null ? NotFound() : Accepted(result);
         }
     }
 }
