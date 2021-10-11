@@ -45,13 +45,13 @@ namespace Treinapp.API.Eventing
             this.topic = topic;
         }
 
-        protected virtual Task<DeliveryResult<string, byte[]>> PublishToKafka(CloudEvent cloudEvent, CancellationToken cancellationToken)
+        protected virtual async Task<DeliveryResult<string, byte[]>> PublishToKafka(CloudEvent cloudEvent, CancellationToken cancellationToken)
         {
             logger.LogTrace("Publishing a new CloudEvent {cloudEventType}", cloudEvent.Type);
 
             try
             {
-                var result = producer.ProduceAsync(
+                DeliveryResult<string, byte[]> result = await producer.ProduceAsync(
                            topic,
                            cloudEvent.ToKafkaMessage(ContentMode.Structured, cloudEventFormatter),
                            cancellationToken);

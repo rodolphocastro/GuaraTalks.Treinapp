@@ -42,15 +42,9 @@ namespace Treinapp.API
                 });
             services.AddHttpContextAccessor();
             services.AddMediatR(GetType().Assembly);
-            services.Configure<ForwardedHeadersOptions>(fwh =>
-            {
-                fwh.ForwardedHeaders = ForwardedHeaders.All;
-            });
+            services.Configure<ForwardedHeadersOptions>(fwh => fwh.ForwardedHeaders = ForwardedHeaders.All);
             services.AddControllers();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Treinapp.API", Version = "v1" });
-            });
+            services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "Treinapp.API", Version = "v1" }));
         }
 
         /// <summary>
@@ -60,7 +54,7 @@ namespace Treinapp.API
         /// <param name="services"></param>
         private void AddKafkaServices(IServiceCollection services)
         {
-            services.AddSingleton(c =>
+            services.AddSingleton(_ =>
             {
                 var config = new ProducerConfig
                 {
@@ -78,10 +72,7 @@ namespace Treinapp.API
         /// <param name="services"></param>
         private void AddMongoServices(IServiceCollection services)
         {
-            services.AddSingleton(_ =>
-            {
-                return new MongoClient(Configuration.GetConnectionString(Constants.MongoConnectionKey));
-            });
+            services.AddSingleton(_ => new MongoClient(Configuration.GetConnectionString(Constants.MongoConnectionKey)));
             services.AddScoped(sp =>
             {
                 MongoClient mongoClient = sp.GetRequiredService<MongoClient>();

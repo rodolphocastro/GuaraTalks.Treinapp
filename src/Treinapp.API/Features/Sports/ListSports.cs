@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 
 using Microsoft.Extensions.Logging;
 
@@ -35,7 +35,8 @@ namespace Treinapp.API.Features.Sports
             logger.LogTrace("Listing all sports");
             IEnumerable<Sport> result = await database
                 .GetSportsCollection()
-                .GetAllAsync(cancellationToken);
+                .GetAllAsync(cancellationToken)
+                .ConfigureAwait(false);
             return result;
         }
     }
