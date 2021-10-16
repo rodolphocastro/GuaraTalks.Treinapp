@@ -8,6 +8,7 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
 COPY ["src/Treinapp.Reports.Portal/Treinapp.Reports.Portal.csproj", "src/Treinapp.Reports.Portal/"]
+COPY ["src/Treinapp.Common/Treinapp.Common.csproj", "src/Treinapp.Common/"]
 RUN dotnet restore "src/Treinapp.Reports.Portal/Treinapp.Reports.Portal.csproj"
 COPY . .
 WORKDIR "/src/src/Treinapp.Reports.Portal"
