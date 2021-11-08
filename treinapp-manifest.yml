@@ -49,6 +49,9 @@ spec:
         image: carlosflor25/treinappreportsapi:latest
         imagePullPolicy: IfNotPresent
         resources:
+          requests:
+            memory: "64"
+            cpu: "50m"
           limits:
             memory: "128Mi"
             cpu: "125m"

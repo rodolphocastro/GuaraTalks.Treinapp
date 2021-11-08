@@ -6,22 +6,26 @@ spec:
   selector:
     app: istio-ingressgateway
   servers:
+  # A set of ports that should be exposed by the proxy
   - port:
       number: 80
       name: http
       protocol: HTTP
     hosts:
     - "*"
-  # - port:
-  #     number: 443
-  #     name: https-443
-  #     protocol: HTTPS
-  #   hosts:
-  #   - "*"
-  #   tls:
-  #     mode: SIMPLE # enables HTTPS on this port
-  #     serverCertificate: /etc/certs/servercert.pem
-  #     privateKey: /etc/certs/privatekey.pem
+    tls:
+      httpsRedirect: true # sends 301 redirect for http requests
+  - port:
+      number: 443
+      name: https-443
+      protocol: HTTPS
+    hosts:
+    - "*"
+    tls:
+      mode: SIMPLE # enables HTTPS on this port
+      credentialName: treinapp-credential
+      # serverCertificate: /etc/certs/servercert.pem # public key
+      # privateKey: /etc/certs/privatekey.pem # private key 
 --- 
 # Configuration for traffic routing
 apiVersion: networking.istio.io/v1alpha3
@@ -44,7 +48,7 @@ spec:
     - destination:
         host: treinapp-reports-svc
         port:
-          number: 80
+          number: 8
   - name: test
     match:
     - uri:
@@ -58,18 +62,6 @@ spec:
           number: 80
   # Split the traffic using their weight 
   - name: treinapp.api
-    delegate:
-       name: treinapp.api
----
-apiVersion: networking.istio.io/v1alpha3
-kind: VirtualService
-metadata:
-  name: treinapp.api
-spec:
-  hosts:
-  - "treinapp.api.svc.v1"
-  http:
-  - name: treinapp
     route: 
     - destination: 
         host: treinapp-api-svc-v1
