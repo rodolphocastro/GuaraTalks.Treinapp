@@ -27,4 +27,10 @@
     <ProjectReference Include="..\..\src\Treinapp.Reports.API\Treinapp.Reports.API.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="test.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
