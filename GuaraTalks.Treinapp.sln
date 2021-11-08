@@ -34,6 +34,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Treinapp.Common", "src\Trei
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Treinapp.Spammer", "src\Treinapp.Spammer\Treinapp.Spammer.csproj", "{744DB311-11A5-4C86-A6FF-B23C640D5DA9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Treinapp.Unit", "tests\Treinapp.Unit\Treinapp.Unit.csproj", "{23D608E1-018F-4A62-A6FC-E2FE2871C324}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 		{744DB311-11A5-4C86-A6FF-B23C640D5DA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{744DB311-11A5-4C86-A6FF-B23C640D5DA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{744DB311-11A5-4C86-A6FF-B23C640D5DA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23D608E1-018F-4A62-A6FC-E2FE2871C324}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23D608E1-018F-4A62-A6FC-E2FE2871C324}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23D608E1-018F-4A62-A6FC-E2FE2871C324}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23D608E1-018F-4A62-A6FC-E2FE2871C324}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
