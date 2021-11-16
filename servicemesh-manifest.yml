@@ -48,7 +48,7 @@ spec:
     - destination:
         host: treinapp-reports-svc
         port:
-          number: 8
+          number: 80
   - name: test
     match:
     - uri:
@@ -60,6 +60,17 @@ spec:
         host: myapp
         port:
           number: 80
+  - name: kafdrop
+    match:
+    - uri: 
+        prefix: /kafdrop
+    rewrite: 
+      uri: "/"
+    route: 
+    - destination:
+        host: kafdrop
+        port: 
+          number: 9000
   # Split the traffic using their weight 
   - name: treinapp.api
     route: 
