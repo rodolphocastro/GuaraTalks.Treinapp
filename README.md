@@ -67,9 +67,30 @@ istioctl install
 
 ### Deploying the application
 
+#### Deploy the necessary metadata
+
 ```shell
-kubectl apply -f servicemesh-manifest.yml
-kubectl apply -f treinapp-manifest.yml
+kubectl apply -f cluster/
+```
+
+#### Deploy istio
+
+```shell
+kubectl apply -f cluster/istio
+# Enable sidecar injection
+kubectl label namespace default istio-injection=enabled --overwrite
+```
+
+#### Deploy kafka cluster
+
+```shell
+kubectl apply -f cluster/kafka
+```
+
+#### Deploy the application
+
+```shell
+kubectl apply -f cluster/application
 ```
 
 ### Opening a tunnel to the ingress load balaner
