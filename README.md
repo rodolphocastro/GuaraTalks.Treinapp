@@ -70,7 +70,7 @@ istioctl install
 #### Deploy the necessary metadata
 
 ```shell
-kubectl apply -f cluster/
+kubectl apply -f cluster/ # It will deploy the secrets for mongo database
 ```
 
 #### Deploy istio
@@ -135,5 +135,5 @@ export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -
 export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].port}')
 
 curl -v --resolve "treinapp.example.com:$SECURE_INGRESS_PORT:$INGRESS_HOST" \
---cacert certificates/treinapp.example.com.crt "https://treinapp.example.com:$SECURE_INGRESS_PORT"
+--cacert certificates/treinapp.example.com.crt "https://treinapp.example.com:$SECURE_INGRESS_PORT/Sports"
 ```
