@@ -77,6 +77,7 @@ spec:
         ports:
         - containerPort: 9092
           name: plaintext
+        # Preferable to include a readiness that will check if zookeeper is health
         # readinessProbe:
         #   exec:
         #     command:
@@ -99,3 +100,41 @@ spec:
             value: "INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT"
           - name: KAFKA_INTER_BROKER_LISTENER_NAME
             value: "INSIDE"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafdrop-svc
+  namespace: kafka
+spec:
+  selector:
+    app: kafdrop
+  ports:
+  - port: 9000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafdrop
+  namespace: kafka
+spec:
+  selector:
+    matchLabels:
+      app: kafdrop
+  template:
+    metadata:
+      labels:
+        app: kafdrop
+    spec:
+      containers:
+      - name: kafdrop
+        image: obsidiandynamics/kafdrop:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        env:
+          - name: KAFKA_BROKERCONNECT
+            value: stream.kafka.svc.cluster.local:9094
+        ports:
+        - containerPort: 9000

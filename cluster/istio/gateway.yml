@@ -26,6 +26,17 @@ spec:
       credentialName: treinapp-credential
       # serverCertificate: /etc/certs/servercert.pem # public key
       # privateKey: /etc/certs/privatekey.pem # private key 
+  - port:
+      number: 9000
+      name: https-9000
+      protocol: HTTPS
+    hosts:
+    - "*"
+    tls:
+      mode: SIMPLE # enables HTTPS on this port
+      credentialName: treinapp-credential
+      # serverCertificate: /etc/certs/servercert.pem # public key
+      # privateKey: /etc/certs/privatekey.pem # private key 
 --- 
 # Configuration for traffic routing
 apiVersion: networking.istio.io/v1alpha3
@@ -57,7 +68,7 @@ spec:
       uri: "/"
     route:
     - destination:
-        host: myapp
+        host: myapp.test.svc.cluster.local
         port:
           number: 80
   - name: kafdrop
@@ -68,7 +79,7 @@ spec:
       uri: "/"
     route: 
     - destination:
-        host: kafdrop
+        host: kafdrop-svc
         port: 
           number: 9000
   # Split the traffic using their weight 
