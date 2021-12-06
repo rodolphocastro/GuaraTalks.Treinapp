@@ -40,6 +40,15 @@ kubectl label namespace default istio-injection=enabled --overwrite
 
 ```shell
 kubectl apply -f cluster/kafka
+# Deploy kafdrop through helm chart
+# Clone the repo
+git clone https://github.com/obsidiandynamics/kafdrop && cd kafdrop
+
+# Deploy the chart
+helm upgrade -i kafdrop chart --namespace=kafka --set image.tag=3.27.0 \
+    --set kafka.brokerConnect=stream.kafka.svc.cluster.local:9094 \
+    --set server.servlet.contextPath="/" \
+    --set jvm.opts="-Xms32M -Xmx64M
 ```
 
 #### Deploy the application
@@ -92,3 +101,19 @@ export SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressga
 curl -v --resolve "treinapp.example.com:$SECURE_INGRESS_PORT:$INGRESS_HOST" \
 --cacert certificates/treinapp.example.com.crt "https://treinapp.example.com:$SECURE_INGRESS_PORT/Sports"
 ```
+
+### Kafdrop Access
+
+- Create a port-forwarding to access kafdrop
+```shell
+kubectl port-forward svc/kafdrop -n kafka 9000:9000
+```
+- Access using `localhost:9000`
+
+### Mongodb Access
+
+- Create a port-forwarding to access mongodb
+```shell
+kubectl port-forward svc/kafdrop -n mongodb 8082:8081
+```
+- Access using `localhost:8082`

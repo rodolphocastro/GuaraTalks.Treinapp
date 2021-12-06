@@ -26,17 +26,6 @@ spec:
       credentialName: treinapp-credential
       # serverCertificate: /etc/certs/servercert.pem # public key
       # privateKey: /etc/certs/privatekey.pem # private key 
-  - port:
-      number: 9000
-      name: https-9000
-      protocol: HTTPS
-    hosts:
-    - "*"
-    tls:
-      mode: SIMPLE # enables HTTPS on this port
-      credentialName: treinapp-credential
-      # serverCertificate: /etc/certs/servercert.pem # public key
-      # privateKey: /etc/certs/privatekey.pem # private key 
 --- 
 # Configuration for traffic routing
 apiVersion: networking.istio.io/v1alpha3
@@ -60,28 +49,18 @@ spec:
         host: treinapp-reports-svc
         port:
           number: 80
-  - name: test
+  - name: mongodb
     match:
     - uri:
-        prefix: /test
-    rewrite:
-      uri: "/"
+        prefix: /mongodb/explorer
+    rewrite:  
+      uri: '/'
     route:
     - destination:
-        host: myapp.test.svc.cluster.local
+        host: mongodb
         port:
-          number: 80
-  - name: kafdrop
-    match:
-    - uri: 
-        prefix: /kafdrop
-    rewrite: 
-      uri: "/"
-    route: 
-    - destination:
-        host: kafdrop-svc
-        port: 
-          number: 9000
+          number: 8081
+
   # Split the traffic using their weight 
   - name: treinapp.api
     route: 

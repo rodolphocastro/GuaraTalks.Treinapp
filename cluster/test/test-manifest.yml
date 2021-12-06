@@ -32,7 +32,8 @@ spec:
   selector:
     app: myapp
   ports:
-  - port: 80
+  - port: 9000
+    targetPort: 80
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
@@ -49,17 +50,20 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: testapp
-  namespace: test
 spec:
   hosts:
-  - "test.api"
+  - "*"
   gateways:
   - treinappgateway
   http:
   - name: test
-    route: 
-    - destination: 
-        host: myapp
-        port: 
-          number: 80
-      weight: 100 # 20% of weight got this service
+    match:
+    - uri:
+        prefix: /test
+    rewrite:
+      uri: "/"
+    route:
+    - destination:
+        host: myapp.test.svc.cluster.local
+        port:
+          number: 9000
