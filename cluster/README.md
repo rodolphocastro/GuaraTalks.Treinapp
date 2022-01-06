@@ -110,10 +110,10 @@ kubectl port-forward svc/kafdrop -n kafka 9000:9000
 ```
 - Access using `localhost:9000`
 
-### Mongodb Access
+### Mongo Explorer Access
 
 - Create a port-forwarding to access mongodb
 ```shell
-kubectl port-forward svc/kafdrop -n mongodb 8082:8081
+kubectl port-forward svc/mongodb 8082:8081
 ```
 - Access using `localhost:8082`
